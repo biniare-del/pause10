@@ -1,17 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Reward</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lucky Reward</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <style>
+    body { background:#0f172a; color:#fff; font-family:system-ui,-apple-system,sans-serif;
+      display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0; text-align:center; }
+    .card { background:#1e293b; padding:40px; border-radius:20px; border:2px solid #fbbf24;
+      box-shadow:0 0 20px rgba(251,191,36,.25); max-width:520px; width:90%; }
+    h1 { color:#fbbf24; margin:0 0 10px; }
+    p { margin:0 0 10px; color:#cbd5e1; }
+    .numbers { display:flex; gap:10px; justify-content:center; margin:25px 0 10px; flex-wrap:wrap; }
+    .ball { width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+      font-weight:800; background:#334155; border:2px solid #fbbf24; font-size:1.1rem; }
+    .row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:18px; }
+    .btn { display:inline-block; padding:12px 22px; border-radius:999px; font-weight:800; text-decoration:none; }
+    .donate { background:#fbbf24; color:#000; }
+    .back { background:#334155; color:#fff; }
+    .small { font-size:12px; color:#64748b; margin-top:14px; }
+  </style>
 </head>
-<body style="background:#111;color:#ffd700;display:flex;align-items:center;justify-content:center;height:100vh;">
-  <div style="text-align:center;">
-    <h1>🎉 You waited 10 seconds</h1>
-    <p>This is your reward page.</p>
-    <a href="https://www.buymeacoffee.com/yourid" target="_blank"
-       style="color:black;background:#ffd700;padding:12px 20px;border-radius:30px;text-decoration:none;font-weight:bold;">
-      ☕ Buy me a coffee
-    </a>
+<body>
+  <div class="card">
+    <h1 id="title">Great job!</h1>
+    <p id="desc">You waited 10 seconds. Here are your lucky numbers.</p>
+
+    <div class="numbers" id="num-container"></div>
+
+    <div class="row">
+      <!-- ✅ 본인 BMC 아이디로 교체 -->
+      <a id="donateLink" href="https://www.buymeacoffee.com/yourRealId" target="_blank" rel="noopener noreferrer" class="btn donate">
+        ☕ Buy me a coffee
+      </a>
+      <a href="javascript:history.back()" class="btn back">↩ Back</a>
+    </div>
+
+    <div class="small" id="note">Tip: If you want different numbers, refresh the page.</div>
   </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const lang = (urlParams.get("lang") || "en").toLowerCase();
+
+    const text = {
+      ko: {
+        title: "축하합니다!",
+        desc: "10초의 유혹을 참아낸 당신께 행운을 드립니다.",
+        donate: "☕ 개발자에게 커피 한 잔 후원하기",
+        note: "다른 번호가 보고 싶으면 새로고침하세요.",
+        range: 45
+      },
+      en: {
+        title: "Great job!",
+        desc: "You waited 10 seconds. Here are your lucky numbers.",
+        donate: "☕ Buy me a coffee",
+        note: "Want different numbers? Refresh the page.",
+        range: 69
+      },
+      ja: {
+        title: "よくやりました！",
+        desc: "10秒待てました。あなたのラッキーナンバーです。",
+        donate: "☕ コーヒーで応援する",
+        note: "別の番号が見たい場合は更新してください。",
+        range: 69
+      },
+      es: {
+        title: "¡Bien hecho!",
+        desc: "Esperaste 10 segundos. Aquí están tus números de la suerte.",
+        donate: "☕ Invítame un café",
+        note: "¿Quieres otros números? Recarga la página.",
+        range: 69
+      }
+    };
+
+    const cur = text[lang] || text.en;
+
+    document.getElementById("title").innerText = cur.title;
+    document.getElementById("desc").innerText = cur.desc;
+    document.getElementById("donateLink").innerText = cur.donate;
+    document.getElementById("note").innerText = cur.note;
+
+    // numbers
+    const nums = [];
+    while (nums.length < 6) {
+      const r = Math.floor(Math.random() * cur.range) + 1;
+      if (!nums.includes(r)) nums.push(r);
+    }
+    nums.sort((a,b) => a-b);
+
+    const container = document.getElementById("num-container");
+    nums.forEach((n, i) => {
+      setTimeout(() => {
+        const ball = document.createElement("div");
+        ball.className = "ball";
+        ball.innerText = n;
+        container.appendChild(ball);
+
+        if (i === 5 && window.confetti) {
+          confetti({ particleCount: 140, spread: 75, origin: { y: 0.6 } });
+        }
+      }, i * 250);
+    });
+  </script>
 </body>
 </html>

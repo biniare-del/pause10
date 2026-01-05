@@ -1,91 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lucky Reward</title>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <title>Pause10 - Reclaim Your Time</title>
+  <script src="./confetti.browser.min.js"></script>
   <style>
-    body { background:#0f172a; color:#fff; font-family:system-ui,-apple-system,sans-serif;
-      display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0; text-align:center; }
-    .card { background:#1e293b; padding:40px; border-radius:20px; border:2px solid #fbbf24;
-      box-shadow:0 0 20px rgba(251,191,36,.25); max-width:520px; width:90%; }
-    h1 { color:#fbbf24; margin:0 0 10px; }
-    p { margin:0 0 10px; color:#cbd5e1; }
-    .numbers { display:flex; gap:10px; justify-content:center; margin:25px 0 10px; flex-wrap:wrap; }
-    .ball { width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-      font-weight:800; background:#334155; border:2px solid #fbbf24; font-size:1.1rem; }
-    .row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:18px; }
-    .btn { display:inline-block; padding:12px 22px; border-radius:999px; font-weight:800; text-decoration:none; }
-    .donate { background:#fbbf24; color:#000; }
-    .back { background:#334155; color:#fff; }
-    .small { font-size:12px; color:#64748b; margin-top:14px; }
+    :root { --primary: #fbbf24; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
+    body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif;
+      display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+    .container { max-width: 500px; width: 100%; text-align: center; }
+    .card { background: var(--card); padding: 40px; border-radius: 24px; border: 2px solid var(--primary);
+      box-shadow: 0 0 30px rgba(251, 191, 36, 0.15); margin-bottom: 24px; }
+    h1 { color: var(--primary); font-size: 32px; margin: 0 0 10px; }
+    .desc { color: #cbd5e1; font-size: 16px; line-height: 1.5; margin-bottom: 25px; }
+    
+    /* 보상 번호 스타일 */
+    .numbers { display: flex; gap: 8px; justify-content: center; margin: 20px 0; }
+    .ball { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; background: #334155; border: 2px solid var(--primary); color: var(--primary); }
+
+    /* 앱 홍보 박스 (핵심) */
+    .promo-box { background: rgba(251, 191, 36, 0.1); border-radius: 16px; padding: 20px; margin-top: 30px; border: 1px dashed var(--primary); }
+    .promo-box h2 { font-size: 18px; margin: 0 0 8px; color: var(--primary); }
+    .promo-box p { font-size: 14px; margin: 0 0 15px; color: #94a3b8; line-height: 1.4; }
+
+    /* 버튼 스타일 */
+    .btn { display: block; padding: 14px; border-radius: 12px; font-weight: 800; text-decoration: none; transition: 0.3s; margin-bottom: 10px; }
+    .btn-main { background: var(--primary); color: #000; }
+    .btn-main:hover { transform: scale(1.02); background: #f59e0b; }
+    .btn-sub { background: #334155; color: #fff; font-size: 14px; }
+    
+    /* 푸터 (Privacy Policy 등) */
+    footer { margin-top: 40px; font-size: 12px; color: #475569; line-height: 1.6; }
+    footer a { color: #64748b; text-decoration: underline; }
+    .small-tip { font-size: 12px; color: #64748b; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1 id="title">Great job!</h1>
-    <p id="desc">You waited 10 seconds. Here are your lucky numbers.</p>
+  <div class="container">
+    <div class="card">
+      <h1 id="title">Great job!</h1>
+      <p id="desc" class="desc">10초의 유혹을 참아낸 당신께 행운을 드립니다.</p>
 
-    <div class="numbers" id="num-container"></div>
+      <div class="numbers" id="num-container"></div>
+      <p class="small-tip" id="note">다른 번호를 원하시면 새로고침하세요.</p>
 
-    <div class="row">
-      <!-- ✅ 본인 BMC 아이디로 교체 -->
-      <a id="donateLink" href="https://www.buymeacoffee.com/yourRealId" target="_blank" rel="noopener noreferrer" class="btn donate">
-        ☕ Buy me a coffee
-      </a>
-      <a href="javascript:history.back()" class="btn back">↩ Back</a>
+      <div class="promo-box">
+        <h2 id="promo-title">📱 앱 출시 알림 신청</h2>
+        <p id="promo-desc">유튜브 쇼츠뿐만 아니라 인스타, 틱톡까지!<br>스스로 시간을 다스리는 퍼즈텐 앱을 가장 먼저 만나보세요.</p>
+        <a href="https://forms.gle/your-google-form-url" target="_blank" class="btn btn-main" id="promo-btn">사전 예약하고 알림 받기</a>
+      </div>
+
+      <div style="margin-top: 25px; display: flex; gap: 10px;">
+        <a id="donateLink" href="https://www.buymeacoffee.com/yourId" target="_blank" class="btn btn-sub" style="flex: 2;">☕ 커피 한 잔 후원</a>
+        <a href="javascript:history.back()" class="btn btn-sub" style="flex: 1;">↩ Back</a>
+      </div>
     </div>
 
-    <div class="small" id="note">Tip: If you want different numbers, refresh the page.</div>
+    <footer>
+      <p><strong>Privacy Policy</strong><br>
+      Pause10 does not collect, store, or share any personal data. <br>
+      Everything runs locally in your browser. <br>
+      Contact: your-email@example.com</p>
+    </footer>
   </div>
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const lang = (urlParams.get("lang") || "en").toLowerCase();
+    const langKey = (urlParams.get("lang") || "ko").toLowerCase();
 
-    const text = {
+    const i18n = {
       ko: {
         title: "축하합니다!",
         desc: "10초의 유혹을 참아낸 당신께 행운을 드립니다.",
-        donate: "☕ 개발자에게 커피 한 잔 후원하기",
-        note: "다른 번호가 보고 싶으면 새로고침하세요.",
-        range: 45
+        note: "다른 번호를 원하시면 새로고침하세요.",
+        promoT: "📱 앱 출시 알림 신청",
+        promoD: "쇼츠, 인스타, 틱톡을 한 곳에서 관리하는<br>퍼즈텐 모바일 앱 출시 소식을 받아보세요.",
+        promoB: "사전 예약하고 알림 받기",
+        donate: "☕ 커피 후원하기"
       },
       en: {
-        title: "Great job!",
-        desc: "You waited 10 seconds. Here are your lucky numbers.",
-        donate: "☕ Buy me a coffee",
-        note: "Want different numbers? Refresh the page.",
-        range: 69
-      },
-      ja: {
-        title: "よくやりました！",
-        desc: "10秒待てました。あなたのラッキーナンバーです。",
-        donate: "☕ コーヒーで応援する",
-        note: "別の番号が見たい場合は更新してください。",
-        range: 69
-      },
-      es: {
-        title: "¡Bien hecho!",
-        desc: "Esperaste 10 segundos. Aquí están tus números de la suerte.",
-        donate: "☕ Invítame un café",
-        note: "¿Quieres otros números? Recarga la página.",
-        range: 69
+        title: "Well Done!",
+        desc: "You've successfully reclaimed your time.",
+        note: "Refresh for new lucky numbers.",
+        promoT: "📱 Get App Notification",
+        promoD: "Manage Shorts, Reels, and TikTok in one place.<br>Be the first to experience Pause10 Mobile.",
+        promoB: "Pre-register Now",
+        donate: "☕ Buy me a coffee"
       }
     };
 
-    const cur = text[lang] || text.en;
-
+    const cur = i18n[langKey] || i18n.en;
     document.getElementById("title").innerText = cur.title;
     document.getElementById("desc").innerText = cur.desc;
-    document.getElementById("donateLink").innerText = cur.donate;
     document.getElementById("note").innerText = cur.note;
+    document.getElementById("promo-title").innerText = cur.promoT;
+    document.getElementById("promo-desc").innerHTML = cur.promoD;
+    document.getElementById("promo-btn").innerText = cur.promoB;
+    document.getElementById("donateLink").innerText = cur.donate;
 
-    // numbers
+    // 번호 생성 로직
     const nums = [];
     while (nums.length < 6) {
-      const r = Math.floor(Math.random() * cur.range) + 1;
+      const r = Math.floor(Math.random() * 45) + 1;
       if (!nums.includes(r)) nums.push(r);
     }
     nums.sort((a,b) => a-b);
@@ -97,40 +115,11 @@
         ball.className = "ball";
         ball.innerText = n;
         container.appendChild(ball);
-
         if (i === 5 && window.confetti) {
-          confetti({ particleCount: 140, spread: 75, origin: { y: 0.6 } });
+          confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
         }
-      }, i * 250);
+      }, i * 200);
     });
   </script>
-
-  <hr>
-
-<section id="privacy-policy">
-  <h2>Privacy Policy</h2>
-
-  <p>
-    Pause10 does not collect, store, transmit, or share any personal or sensitive user data.
-  </p>
-
-  <p>
-    The extension runs entirely locally in the user's browser and does not use analytics,
-    tracking technologies, cookies, or remote servers.
-  </p>
-
-  <p>
-    No user data is sold, shared, or transferred to third parties.
-  </p>
-
-  <p>
-    If you have any questions regarding this privacy policy,
-    you may contact the developer via the email provided on the Chrome Web Store listing.
-  </p>
-</section>
-
 </body>
 </html>
-
-Trigger Pages rebuild
-

@@ -4,29 +4,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pause10 - Reclaim Your Time</title>
-  <script src="./confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
-    :root { --primary: #fbbf24; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
-    body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif;
+    :root { --primary: #fbbf24; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #22c55e; }
+    body { background: var(--bg); color: var(--text); font-family: 'Pretendard', system-ui, sans-serif;
       display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
-    .container { max-width: 500px; width: 100%; text-align: center; }
-    .card { background: var(--card); padding: 40px; border-radius: 24px; border: 2px solid var(--primary);
-      box-shadow: 0 0 30px rgba(251, 191, 36, 0.15); margin-bottom: 24px; }
-    h1 { color: var(--primary); font-size: 32px; margin: 0 0 10px; }
-    .desc { color: #cbd5e1; font-size: 16px; line-height: 1.5; margin-bottom: 25px; }
-    .numbers { display: flex; gap: 8px; justify-content: center; margin: 20px 0; }
-    .ball { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-weight: 800; background: #334155; border: 2px solid var(--primary); color: var(--primary); }
-    #fortune-area { display: none; margin: 20px 0; padding: 20px; background: rgba(251, 191, 36, 0.05); 
-      border-radius: 16px; border: 1px solid rgba(251, 191, 36, 0.2); animation: fadeIn 0.8s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .promo-box { background: rgba(251, 191, 36, 0.1); border-radius: 16px; padding: 20px; margin-top: 30px; border: 1px dashed var(--primary); }
-    .promo-box h2 { font-size: 18px; margin: 0 0 8px; color: var(--primary); }
-    .promo-box p { font-size: 14px; margin: 0 0 15px; color: #94a3b8; line-height: 1.4; }
-    .btn { display: block; padding: 14px; border-radius: 12px; font-weight: 800; text-decoration: none; transition: 0.3s; margin-bottom: 10px; border: none; cursor: pointer; }
-    .btn-main { background: var(--primary); color: #000; }
-    .btn-sub { background: #334155; color: #fff; font-size: 14px; }
-    footer { margin-top: 40px; font-size: 12px; color: #475569; }
+    .container { max-width: 480px; width: 100%; text-align: center; }
+    
+    /* 카드 디자인 업그레이드 */
+    .card { background: var(--card); padding: 40px 30px; border-radius: 32px; border: 1px solid rgba(251, 191, 36, 0.3);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 20px rgba(251, 191, 36, 0.1); position: relative; overflow: hidden; }
+    
+    h1 { color: var(--primary); font-size: 28px; font-weight: 800; margin: 0 0 10px; letter-spacing: -0.5px; }
+    .desc { color: #94a3b8; font-size: 16px; line-height: 1.6; margin-bottom: 30px; }
+    
+    /* 번호 공 디자인 업그레이드 */
+    .numbers { display: flex; gap: 10px; justify-content: center; margin: 25px 0; }
+    .ball { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; background: linear-gradient(145deg, #334155, #1e293b); border: 1px solid rgba(251, 191, 36, 0.5); 
+      color: var(--primary); font-size: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+      transform: translateY(20px); opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .ball.show { transform: translateY(0); opacity: 1; }
+
+    /* 행운의 문구 섹션 - 황금색 포인트 */
+    #fortune-area { display: none; margin-top: 30px; padding: 25px; background: rgba(251, 191, 36, 0.08); 
+      border-radius: 24px; border: 1px solid var(--primary); animation: slideUp 0.6s ease-out forwards; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+    #fortune-icon { font-size: 44px; margin-bottom: 12px; filter: drop-shadow(0 0 10px rgba(251,191,36,0.5)); }
+    #fortune-title { color: var(--primary); font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; font-weight: 700; }
+    #fortune-desc { font-size: 17px; color: #f1f5f9; line-height: 1.5; font-weight: 500; word-break: keep-all; }
+
+    /* 버튼 디자인 리뉴얼 */
+    .btn { display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 16px; border-radius: 16px; 
+      font-weight: 700; text-decoration: none; transition: 0.2s; border: none; cursor: pointer; font-size: 15px; margin-top: 12px; }
+    .btn-share { background: var(--accent); color: white; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); }
+    .btn-share:hover { background: #16a34a; transform: translateY(-2px); }
+    .btn-main { background: var(--primary); color: #000; margin-top: 20px; }
+    .btn-sub { background: rgba(255,255,255,0.05); color: #cbd5e1; font-size: 13px; border: 1px solid rgba(255,255,255,0.1); }
+    
+    .promo-box { margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+    .small-tip { font-size: 12px; color: #64748b; margin-top: 15px; }
   </style>
 </head>
 <body>
@@ -34,23 +52,26 @@
     <div class="card">
       <h1 id="title">Great job!</h1>
       <p id="desc" class="desc">10초의 유혹을 참아낸 당신께 행운을 드립니다.</p>
+      
       <div class="numbers" id="num-container"></div>
-      <p style="font-size:12px; color:#64748b;" id="note">다른 번호를 원하시면 새로고침하세요.</p>
+      
       <div id="fortune-area">
-        <div id="fortune-icon" style="font-size: 40px; margin-bottom: 10px;"></div>
-        <h3 id="fortune-title" style="color: var(--primary); font-size: 18px; margin: 0 0 8px;"></h3>
-        <p id="fortune-desc" style="font-size: 15px; color: #cbd5e1; line-height: 1.5; margin: 0;"></p>
-        <button id="btn-share" class="btn btn-main" style="width: 100%; margin-top: 15px; background: #22c55e; color: white; display: none;"></button>
+        <div id="fortune-title">TODAY'S LUCK</div>
+        <div id="fortune-icon"></div>
+        <p id="fortune-desc"></p>
+        <button id="btn-share" class="btn btn-share">📱 행운 공유하기</button>
       </div>
+
       <div class="promo-box">
-        <h2 id="promo-title">📱 앱 출시 알림 신청</h2>
-        <p id="promo-desc"></p>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSchezD_hdqkjGXVTCqM8JaL02IEP8fAoK9GJ57FnB54L5Ql4Q/viewform?usp=header" target="_blank" class="btn btn-main" id="promo-btn">사전 예약하고 알림 받기</a>
+        <p id="promo-desc" style="font-size: 14px; color: #94a3b8; margin-bottom: 15px;"></p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSchezD_hdqkjGXVTCqM8JaL02IEP8fAoK9GJ57FnB54L5Ql4Q/viewform?usp=header" target="_blank" class="btn btn-main" id="promo-btn">사전 예약하기</a>
       </div>
-      <div style="margin-top: 25px; display: flex; gap: 10px;">
-        <a id="donateLink" href="https://www.buymeacoffee.com/pause10" target="_blank" class="btn btn-sub" style="flex: 2;">☕ 커피 한 잔 후원</a>
+
+      <div style="margin-top: 20px; display: flex; gap: 8px;">
+        <a id="donateLink" href="https://www.buymeacoffee.com/pause10" target="_blank" class="btn btn-sub" style="flex: 1.5;">☕ Coffee</a>
         <a href="javascript:history.back()" class="btn btn-sub" style="flex: 1;">↩ Back</a>
       </div>
+      <p class="small-tip" id="note"></p>
     </div>
   </div>
 
@@ -59,29 +80,28 @@
     const langKey = (urlParams.get("lang") || "ko").toLowerCase();
 
     const i18n = {
-      ko: { title: "축하합니다!", desc: "10초의 유혹을 참아낸 당신께 행운을 드립니다.", note: "다른 번호를 원하시면 새로고침하세요.", promoT: "📱 앱 출시 알림 신청", promoD: "퍼즈텐 모바일 앱 출시 소식을 받아보세요.", promoB: "사전 예약하기", donate: "☕ 커피 후원하기", fortuneTitle: "오늘의 행운", shareBtn: "📱 행운 공유하기" },
-      en: { title: "Well Done!", desc: "You've successfully reclaimed your time.", note: "Refresh for new lucky numbers.", promoT: "📱 Get App Notification", promoD: "Be the first to experience Pause10 Mobile.", promoB: "Pre-register Now", donate: "☕ Buy me a coffee", fortuneTitle: "Today's Luck", shareBtn: "📱 Share Luck" },
-      ja: { title: "おめでとう！", desc: "10秒の誘惑に打ち勝ったあなたに幸運を。", note: "新しい番号は再読み込みしてください。", promoT: "📱 アプリ通知予約", promoD: "Pause10モバイル版のリリース情報をお届けします。", promoB: "事前予約する", donate: "☕ コーヒーを贈る", fortuneTitle: "今日の運勢", shareBtn: "📱 幸運をシェア" }
+      ko: { title: "대단합니다!", desc: "유혹을 이겨낸 10초가 당신의 운을 바꿨습니다.", note: "새로운 번호를 원하시면 새로고침하세요.", promoD: "중독 탈출 솔루션, 퍼즈텐 앱 출시 알림", promoB: "앱 출시 알림 신청", fortuneTitle: "오늘의 행운", shareBtn: "📱 나의 행운 공유하기" },
+      en: { title: "Well Done!", desc: "The 10s you saved just changed your luck.", note: "Refresh for new lucky numbers.", promoD: "Get notified for Pause10 App launch.", promoB: "Pre-register Now", fortuneTitle: "Today's Luck", shareBtn: "📱 Share My Luck" },
+      ja: { title: "おめでとう！", desc: "誘惑に打ち勝った10秒があなたの運を変えました。", note: "新しい番号は再読み込みしてください。", promoD: "Pause10アプリのリリース情報を受け取る", promoB: "リリース通知を予約", fortuneTitle: "今日の運勢", shareBtn: "📱 幸運をシェアする" }
     };
 
     const cur = i18n[langKey] || i18n.en;
     document.getElementById("title").innerText = cur.title;
     document.getElementById("desc").innerText = cur.desc;
     document.getElementById("note").innerText = cur.note;
-    document.getElementById("promo-title").innerText = cur.promoT;
     document.getElementById("promo-desc").innerText = cur.promoD;
     document.getElementById("promo-btn").innerText = cur.promoB;
-    document.getElementById("donateLink").innerText = cur.donate;
     document.getElementById("btn-share").innerText = cur.shareBtn;
+    document.getElementById("fortune-title").innerText = cur.fortuneTitle;
 
     const fortuneData = [
       { icon: "🍀", ko: "인내는 쓰고 열매는 답니다. 오늘 그 열매를 확인하세요!", en: "Patience is bitter, but its fruit is sweet. Check it!", ja: "忍耐は苦い、しかしその実は甘い。今日その実を確認しましょう！" },
       { icon: "✨", ko: "오늘 당신의 직감은 최고조입니다. 번호를 믿어보세요!", en: "Your intuition is at its peak today. Trust your numbers!", ja: "今日のあなたの直感は最高潮です。番号を信じてみてください！" },
-      { icon: "💰", ko: "멈춘 10초가 당신에게 더 큰 행운으로 돌아옵니다.", en: "The 10s you paused will return as greater luck.", ja: "立ち止まった10秒が、あなたに大きな幸運をもたらします。" },
+      { icon: "💰", ko: "멈춘 10초가 당신에게 더 큰 행운으로 돌아옵니다.", en: "The 10s you paused will return as greater luck.", ja: "立ち止まった10秒が、あなたに大きな幸운をもたらします。" },
       { icon: "👑", ko: "당신은 시간을 다스리는 사람입니다. 행운이 따를 거예요!", en: "You control your time. Great luck will follow you!", ja: "あなたは時間を操る人です。幸運が訪れるでしょう！" },
       { icon: "🎁", ko: "오늘 오후, 뜻밖의 장소에서 기분 좋은 소식이 들려옵니다.", en: "Good news will arrive from an unexpected place today.", ja: "今日の午後、思いがけない場所から嬉しい知らせが届きます。" },
       { icon: "🌟", ko: "작은 절제가 모여 큰 기적을 만듭니다. 오늘이 그날입니다.", en: "Small discipline creates big miracles. Today is the day.", ja: "小さな節制が大きな奇跡を作ります。今日がその日です。" },
-      { icon: "🌈", ko: "당신의 앞길에 무지개 같은 행운이 가득하기를!", en: "May your path be filled with rainbow-like luck!", ja: "あなたの行く先に虹のような幸運が満치溢れますように！" },
+      { icon: "🌈", ko: "당신의 앞길에 무지개 같은 행운이 가득하기를!", en: "May your path be filled with rainbow-like luck!", ja: "あなたの行く先に虹のような幸運이満ち溢れますように！" },
       { icon: "💎", ko: "당신의 인내심은 보석보다 빛납니다. 행운을 잡으세요!", en: "Your patience shines brighter than gems. Grab the luck!", ja: "あなたの忍耐は宝石より輝いています。幸運を掴んでください！" },
       { icon: "🕊️", ko: "마음의 평온이 찾아오면 행운도 함께 찾아오는 법입니다.", en: "When peace finds your heart, luck follows.", ja: "心の平穏が訪れれば、幸運も自ずとやってくるものです。" },
       { icon: "🔥", ko: "지금 이 순간의 에너지가 행운의 번호에 녹아들었습니다.", en: "Your energy right now is melted into these numbers.", ja: "今この瞬間のエネルギーが幸運の番号に溶け込みました。" },
@@ -89,7 +109,7 @@
       { icon: "🏹", ko: "당신이 목표한 바가 오늘 번호처럼 딱 들어맞을 거예요.", en: "What you aim for will hit the mark, just like today.", ja: "あなたが目標としたことが、今日の番号のように的中します。" },
       { icon: "🌙", ko: "밤하늘의 별처럼 당신의 행운도 반짝이고 있습니다.", en: "Your luck is twinkling like the stars in the night sky.", ja: "夜空の星のように、あなたの幸運も輝いています。" },
       { icon: "🚀", ko: "당신의 운이 오늘을 기점으로 폭발적으로 상승합니다!", en: "Your luck will skyrocket starting from today!", ja: "あなたの運勢は今日を境に爆発的に上昇します！" },
-      { icon: "🍃", ko: "기분 좋은 바람을 타고 행운이 당신 곁에 머뭅니다.", en: "Luck rides a pleasant breeze and stays by your side.", ja: "心地よい風に乗って、幸運があなたのそば에留まります。" },
+      { icon: "🍃", ko: "기분 좋은 바람을 타고 행운이 당신 곁에 머뭅니다.", en: "Luck rides a pleasant breeze and stays by your side.", ja: "心地よい風に乗って、幸運があなたのそばに留まります。" },
       { icon: "🌻", ko: "해바라기처럼 밝은 미소가 행운을 더 크게 불러옵니다.", en: "A bright smile like a sunflower brings even more luck.", ja: "明るい笑顔が幸運をさらに呼び寄せます。" },
       { icon: "🎈", ko: "가벼운 마음으로 즐기세요. 행운은 즐기는 자의 편입니다.", en: "Enjoy with a light heart. Luck is on the side of joy.", ja: "軽い気持ちで楽しんでください。幸運は楽しむ人の味方です。" },
       { icon: "🗝️", ko: "당신의 인내가 행운의 문을 여는 열쇠가 되었습니다.", en: "Your patience has become the key to opening luck's door.", ja: "あなたの忍耐が幸運の扉を開く鍵となりました。" },
@@ -121,28 +141,44 @@
         ball.className = "ball";
         ball.innerText = n;
         container.appendChild(ball);
+        setTimeout(() => ball.classList.add('show'), 10);
+
         if (i === 5) {
-          if(window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-          showFortune(nums);
+          setTimeout(() => {
+            if(window.confetti) {
+              // 폭죽 효과 강화! 
+              var duration = 3 * 1000;
+              var end = Date.now() + duration;
+              (function frame() {
+                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#fbbf24', '#ffffff'] });
+                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#fbbf24', '#ffffff'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+              }());
+            }
+            showFortune(nums);
+          }, 500);
         }
-      }, i * 200);
+      }, i * 250);
     });
 
     function showFortune(luckyNums) {
       setTimeout(() => {
         const randomFortune = fortuneData[Math.floor(Math.random() * fortuneData.length)];
         document.getElementById("fortune-icon").innerText = randomFortune.icon;
-        document.getElementById("fortune-title").innerText = cur.fortuneTitle;
         document.getElementById("fortune-desc").innerText = randomFortune[langKey] || randomFortune.en;
         document.getElementById("fortune-area").style.display = "block";
+        
         const shareBtn = document.getElementById("btn-share");
-        shareBtn.style.display = "block";
         shareBtn.onclick = () => {
-          const msg = `[Pause10] ${luckyNums.join(", ")}\n${randomFortune[langKey] || randomFortune.en}`;
-          if (navigator.share) navigator.share({ text: msg });
-          else { navigator.clipboard.writeText(msg); alert("Copied!"); }
+          const msg = `[Pause10] ${cur.title}\nLucky: ${luckyNums.join(", ")}\n"${randomFortune[langKey] || randomFortune.en}"`;
+          if (navigator.share) {
+            navigator.share({ title: 'Pause10 Luck', text: msg, url: window.location.href });
+          } else {
+            navigator.clipboard.writeText(msg);
+            alert("복사되었습니다!");
+          }
         };
-      }, 1000);
+      }, 800);
     }
   </script>
 </body>

@@ -14,28 +14,19 @@
       box-shadow: 0 0 30px rgba(251, 191, 36, 0.15); margin-bottom: 24px; }
     h1 { color: var(--primary); font-size: 32px; margin: 0 0 10px; }
     .desc { color: #cbd5e1; font-size: 16px; line-height: 1.5; margin-bottom: 25px; }
-    
     .numbers { display: flex; gap: 8px; justify-content: center; margin: 20px 0; }
     .ball { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
       font-weight: 800; background: #334155; border: 2px solid var(--primary); color: var(--primary); }
-
-    /* 행운의 문구 상자 스타일 */
     #fortune-area { display: none; margin: 20px 0; padding: 20px; background: rgba(251, 191, 36, 0.05); 
       border-radius: 16px; border: 1px solid rgba(251, 191, 36, 0.2); animation: fadeIn 0.8s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
     .promo-box { background: rgba(251, 191, 36, 0.1); border-radius: 16px; padding: 20px; margin-top: 30px; border: 1px dashed var(--primary); }
     .promo-box h2 { font-size: 18px; margin: 0 0 8px; color: var(--primary); }
     .promo-box p { font-size: 14px; margin: 0 0 15px; color: #94a3b8; line-height: 1.4; }
-
-    .btn { display: block; padding: 14px; border-radius: 12px; font-weight: 800; text-decoration: none; transition: 0.3s; margin-bottom: 10px; cursor: pointer; border: none; }
+    .btn { display: block; padding: 14px; border-radius: 12px; font-weight: 800; text-decoration: none; transition: 0.3s; margin-bottom: 10px; border: none; cursor: pointer; }
     .btn-main { background: var(--primary); color: #000; }
-    .btn-main:hover { transform: scale(1.02); background: #f59e0b; }
     .btn-sub { background: #334155; color: #fff; font-size: 14px; }
-    
-    footer { margin-top: 40px; font-size: 12px; color: #475569; line-height: 1.6; }
-    footer a { color: #64748b; text-decoration: underline; }
-    .small-tip { font-size: 12px; color: #64748b; margin-top: 10px; }
+    footer { margin-top: 40px; font-size: 12px; color: #475569; }
   </style>
 </head>
 <body>
@@ -43,35 +34,24 @@
     <div class="card">
       <h1 id="title">Great job!</h1>
       <p id="desc" class="desc">10초의 유혹을 참아낸 당신께 행운을 드립니다.</p>
-
       <div class="numbers" id="num-container"></div>
-      <p class="small-tip" id="note">다른 번호를 원하시면 새로고침하세요.</p>
-
+      <p style="font-size:12px; color:#64748b;" id="note">다른 번호를 원하시면 새로고침하세요.</p>
       <div id="fortune-area">
         <div id="fortune-icon" style="font-size: 40px; margin-bottom: 10px;"></div>
         <h3 id="fortune-title" style="color: var(--primary); font-size: 18px; margin: 0 0 8px;"></h3>
         <p id="fortune-desc" style="font-size: 15px; color: #cbd5e1; line-height: 1.5; margin: 0;"></p>
-        <button id="btn-share" class="btn btn-main" style="width: 100%; margin-top: 15px; background: #22c55e; color: white; display: none;">📱 행운 공유하기</button>
+        <button id="btn-share" class="btn btn-main" style="width: 100%; margin-top: 15px; background: #22c55e; color: white; display: none;"></button>
       </div>
-
       <div class="promo-box">
         <h2 id="promo-title">📱 앱 출시 알림 신청</h2>
-        <p id="promo-desc">유튜브 쇼츠뿐만 아니라 인스타, 틱톡까지!<br>스스로 시간을 다스리는 퍼즈텐 앱을 가장 먼저 만나보세요.</p>
+        <p id="promo-desc"></p>
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSchezD_hdqkjGXVTCqM8JaL02IEP8fAoK9GJ57FnB54L5Ql4Q/viewform?usp=header" target="_blank" class="btn btn-main" id="promo-btn">사전 예약하고 알림 받기</a>
       </div>
-
       <div style="margin-top: 25px; display: flex; gap: 10px;">
         <a id="donateLink" href="https://www.buymeacoffee.com/pause10" target="_blank" class="btn btn-sub" style="flex: 2;">☕ 커피 한 잔 후원</a>
         <a href="javascript:history.back()" class="btn btn-sub" style="flex: 1;">↩ Back</a>
       </div>
     </div>
-
-    <footer>
-      <p><strong>Privacy Policy</strong><br>
-      Pause10 does not collect, store, or share any personal data. <br>
-      Everything runs locally in your browser. <br>
-      Contact: your-email@example.com</p>
-    </footer>
   </div>
 
   <script>
@@ -79,24 +59,9 @@
     const langKey = (urlParams.get("lang") || "ko").toLowerCase();
 
     const i18n = {
-      ko: {
-        title: "축하합니다!", desc: "10초의 유혹을 참아낸 당신께 행운을 드립니다.", note: "다른 번호를 원하시면 새로고침하세요.",
-        promoT: "📱 앱 출시 알림 신청", promoD: "쇼츠, 인스타, 틱톡을 한 곳에서 관리하는<br>퍼즈텐 모바일 앱 출시 소식을 받아보세요.",
-        promoB: "사전 예약하고 알림 받기", donate: "☕ 커피 후원하기", fortuneTitle: "오늘의 행운",
-        shareBtn: "📱 행운 공유하기", shareMsg: "[Pause10] 10초 참고 받은 행운의 번호! 여러분도 도파민 중독에서 벗어나보세요!"
-      },
-      en: {
-        title: "Well Done!", desc: "You've successfully reclaimed your time.", note: "Refresh for new lucky numbers.",
-        promoT: "📱 Get App Notification", promoD: "Manage Shorts, Reels, and TikTok in one place.<br>Be the first to experience Pause10 Mobile.",
-        promoB: "Pre-register Now", donate: "☕ Buy me a coffee", fortuneTitle: "Today's Luck",
-        shareBtn: "📱 Share Luck", shareMsg: "[Pause10] I saved 10s and got lucky numbers! Break your shorts addiction too!"
-      },
-      ja: {
-        title: "おめでとうございます！", desc: "10秒の誘惑に打ち勝ったあなたに幸運を。", note: "新しい番号が必要な場合は再読み込みしてください。",
-        promoT: "📱 アプリリリース通知予約", promoD: "YouTube、インスタ、TikTokをこれ一つで管理。<br>Pause10モバイル版のリリース情報をいち早くお届けします。",
-        promoB: "事前予約して通知を受け取る", donate: "☕ コーヒーで応援する", fortuneTitle: "今日の運勢",
-        shareBtn: "📱 幸運をシェア", shareMsg: "[Pause10] 10秒我慢して幸運の番号をゲット！あなたも脱ドーパミン中毒！"
-      }
+      ko: { title: "축하합니다!", desc: "10초의 유혹을 참아낸 당신께 행운을 드립니다.", note: "다른 번호를 원하시면 새로고침하세요.", promoT: "📱 앱 출시 알림 신청", promoD: "퍼즈텐 모바일 앱 출시 소식을 받아보세요.", promoB: "사전 예약하기", donate: "☕ 커피 후원하기", fortuneTitle: "오늘의 행운", shareBtn: "📱 행운 공유하기" },
+      en: { title: "Well Done!", desc: "You've successfully reclaimed your time.", note: "Refresh for new lucky numbers.", promoT: "📱 Get App Notification", promoD: "Be the first to experience Pause10 Mobile.", promoB: "Pre-register Now", donate: "☕ Buy me a coffee", fortuneTitle: "Today's Luck", shareBtn: "📱 Share Luck" },
+      ja: { title: "おめでとう！", desc: "10秒の誘惑に打ち勝ったあなたに幸運を。", note: "新しい番号は再読み込みしてください。", promoT: "📱 アプリ通知予約", promoD: "Pause10モバイル版のリリース情報をお届けします。", promoB: "事前予約する", donate: "☕ コーヒーを贈る", fortuneTitle: "今日の運勢", shareBtn: "📱 幸運をシェア" }
     };
 
     const cur = i18n[langKey] || i18n.en;
@@ -104,7 +69,7 @@
     document.getElementById("desc").innerText = cur.desc;
     document.getElementById("note").innerText = cur.note;
     document.getElementById("promo-title").innerText = cur.promoT;
-    document.getElementById("promo-desc").innerHTML = cur.promoD;
+    document.getElementById("promo-desc").innerText = cur.promoD;
     document.getElementById("promo-btn").innerText = cur.promoB;
     document.getElementById("donateLink").innerText = cur.donate;
     document.getElementById("btn-share").innerText = cur.shareBtn;
@@ -116,7 +81,7 @@
       { icon: "👑", ko: "당신은 시간을 다스리는 사람입니다. 행운이 따를 거예요!", en: "You control your time. Great luck will follow you!", ja: "あなたは時間を操る人です。幸運が訪れるでしょう！" },
       { icon: "🎁", ko: "오늘 오후, 뜻밖의 장소에서 기분 좋은 소식이 들려옵니다.", en: "Good news will arrive from an unexpected place today.", ja: "今日の午後、思いがけない場所から嬉しい知らせが届きます。" },
       { icon: "🌟", ko: "작은 절제가 모여 큰 기적을 만듭니다. 오늘이 그날입니다.", en: "Small discipline creates big miracles. Today is the day.", ja: "小さな節制が大きな奇跡を作ります。今日がその日です。" },
-      { icon: "🌈", ko: "당신의 앞길에 무지개 같은 행운이 가득하기를!", en: "May your path be filled with rainbow-like luck!", ja: "あなたの行く先に虹のような幸運が満ち溢れますように！" },
+      { icon: "🌈", ko: "당신의 앞길에 무지개 같은 행운이 가득하기를!", en: "May your path be filled with rainbow-like luck!", ja: "あなたの行く先に虹のような幸運が満치溢れますように！" },
       { icon: "💎", ko: "당신의 인내심은 보석보다 빛납니다. 행운을 잡으세요!", en: "Your patience shines brighter than gems. Grab the luck!", ja: "あなたの忍耐は宝石より輝いています。幸運を掴んでください！" },
       { icon: "🕊️", ko: "마음의 평온이 찾아오면 행운도 함께 찾아오는 법입니다.", en: "When peace finds your heart, luck follows.", ja: "心の平穏が訪れれば、幸運も自ずとやってくるものです。" },
       { icon: "🔥", ko: "지금 이 순간의 에너지가 행운의 번호에 녹아들었습니다.", en: "Your energy right now is melted into these numbers.", ja: "今この瞬間のエネルギーが幸運の番号に溶け込みました。" },
@@ -124,7 +89,7 @@
       { icon: "🏹", ko: "당신이 목표한 바가 오늘 번호처럼 딱 들어맞을 거예요.", en: "What you aim for will hit the mark, just like today.", ja: "あなたが目標としたことが、今日の番号のように的中します。" },
       { icon: "🌙", ko: "밤하늘의 별처럼 당신의 행운도 반짝이고 있습니다.", en: "Your luck is twinkling like the stars in the night sky.", ja: "夜空の星のように、あなたの幸運も輝いています。" },
       { icon: "🚀", ko: "당신의 운이 오늘을 기점으로 폭발적으로 상승합니다!", en: "Your luck will skyrocket starting from today!", ja: "あなたの運勢は今日を境に爆発的に上昇します！" },
-      { icon: "🍃", ko: "기분 좋은 바람을 타고 행운이 당신 곁에 머뭅니다.", en: "Luck rides a pleasant breeze and stays by your side.", ja: "心地よい風に乗って、幸運があなたのそばに留まります。" },
+      { icon: "🍃", ko: "기분 좋은 바람을 타고 행운이 당신 곁에 머뭅니다.", en: "Luck rides a pleasant breeze and stays by your side.", ja: "心地よい風に乗って、幸運があなたのそば에留まります。" },
       { icon: "🌻", ko: "해바라기처럼 밝은 미소가 행운을 더 크게 불러옵니다.", en: "A bright smile like a sunflower brings even more luck.", ja: "明るい笑顔が幸運をさらに呼び寄せます。" },
       { icon: "🎈", ko: "가벼운 마음으로 즐기세요. 행운은 즐기는 자의 편입니다.", en: "Enjoy with a light heart. Luck is on the side of joy.", ja: "軽い気持ちで楽しんでください。幸運は楽しむ人の味方です。" },
       { icon: "🗝️", ko: "당신의 인내가 행운의 문을 여는 열쇠가 되었습니다.", en: "Your patience has become the key to opening luck's door.", ja: "あなたの忍耐が幸運の扉を開く鍵となりました。" },
@@ -156,8 +121,8 @@
         ball.className = "ball";
         ball.innerText = n;
         container.appendChild(ball);
-        if (i === 5 && window.confetti) {
-          confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+        if (i === 5) {
+          if(window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
           showFortune(nums);
         }
       }, i * 200);
@@ -170,17 +135,12 @@
         document.getElementById("fortune-title").innerText = cur.fortuneTitle;
         document.getElementById("fortune-desc").innerText = randomFortune[langKey] || randomFortune.en;
         document.getElementById("fortune-area").style.display = "block";
-        
         const shareBtn = document.getElementById("btn-share");
         shareBtn.style.display = "block";
         shareBtn.onclick = () => {
-          const shareText = `${cur.shareMsg}\n${luckyNums.join(", ")}\nFortune: ${randomFortune[langKey] || randomFortune.en}`;
-          if (navigator.share) {
-            navigator.share({ title: 'Pause10 Luck', text: shareText, url: window.location.href });
-          } else {
-            navigator.clipboard.writeText(shareText);
-            alert("Copied to clipboard!");
-          }
+          const msg = `[Pause10] ${luckyNums.join(", ")}\n${randomFortune[langKey] || randomFortune.en}`;
+          if (navigator.share) navigator.share({ text: msg });
+          else { navigator.clipboard.writeText(msg); alert("Copied!"); }
         };
       }, 1000);
     }

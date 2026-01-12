@@ -4,11 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Pause10 - Reclaim Your Time</title>
-  
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3563/3563395.png">
-  
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
@@ -17,13 +12,13 @@
       --text: #f8fafc; --accent: #10b981; --sub: #94a3b8;
     }
     
-    /* 시스템 설정에 따른 라이트 모드 대응 (미세 조정) */
+    /* 🌓 라이트 모드 대응: 사용자 시스템 설정에 따라 자동 변경 */
     @media (prefers-color-scheme: light) {
       :root { --bg: #f1f5f9; --card: #ffffff; --text: #1e293b; --sub: #64748b; }
     }
 
     body { background: var(--bg); color: var(--text); font-family: 'Pretendard', sans-serif; 
-      margin: 0; padding: 20px; box-sizing: border-box; display: flex; justify-content: center; min-height: 100vh; transition: 0.3s; }
+      margin: 0; padding: 20px; box-sizing: border-box; display: flex; justify-content: center; min-height: 100vh; transition: background 0.3s, color 0.3s; }
     
     .container { max-width: 600px; width: 100%; }
     
@@ -31,29 +26,22 @@
       border: 1px solid rgba(251, 191, 36, 0.2);
       box-shadow: 0 30px 60px rgba(0,0,0,0.5); position: relative; width: 100%; box-sizing: border-box; overflow: hidden; }
 
-    /* 실시간 접속자 배지 */
-    .live-badge { position: absolute; top: 20px; right: 30px; background: rgba(16, 185, 129, 0.1); 
-      color: var(--accent); padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700;
-      display: flex; align-items: center; gap: 5px; animation: pulse 2s infinite; }
+    .live-badge { position: absolute; top: 20px; right: 30px; background: rgba(16, 185, 129, 0.1); color: var(--accent); padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 5px; animation: pulse 2s infinite; }
     .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
 
     h1 { color: var(--gold); font-size: 32px; font-weight: 900; margin: 0 0 10px; letter-spacing: -1.5px; }
-    .desc { font-size: 14px; color: var(--sub); margin-bottom: 25px; }
 
-    .stats-row { display: flex; justify-content: space-between; margin-bottom: 30px; padding: 20px 40px; 
-      background: rgba(255,255,255,0.03); border-radius: 25px; border: 1px solid rgba(251, 191, 36, 0.1); }
+    .stats-row { display: flex; justify-content: space-between; margin-bottom: 30px; padding: 20px 40px; background: rgba(127,127,127,0.05); border-radius: 25px; border: 1px solid rgba(251, 191, 36, 0.1); }
     .stat-item span { display: block; font-size: 11px; color: var(--sub); text-transform: uppercase; margin-bottom: 5px; }
     .stat-item strong { font-size: 22px; color: var(--gold); font-weight: 800; }
 
     .ball-container { display: flex; gap: 12px; justify-content: center; margin: 30px 0; flex-wrap: wrap; }
-    .ball { width: 55px; height: 55px; border-radius: 16px; display: flex; align-items: center; justify-content: center;
-      font-weight: 800; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(251, 191, 36, 0.2); color: var(--gold); font-size: 22px;
-      opacity: 0; transform: scale(0.5); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .ball { width: 55px; height: 55px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-weight: 800; background: rgba(15, 23, 42, 0.1); border: 1.5px solid rgba(251, 191, 36, 0.2); color: var(--gold); font-size: 22px; opacity: 0; transform: scale(0.5); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .ball.show { opacity: 1; transform: scale(1); }
 
     .content-box { display: none; animation: fadeInUp 0.8s ease-out; }
-    #fortune-box { margin-top: 20px; padding: 30px; border-radius: 30px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(251, 191, 36, 0.1); }
-    .talisman-icon { font-size: 50px; margin-bottom: 10px; }
+    #fortune-box { margin-top: 20px; padding: 30px; border-radius: 30px; background: rgba(127, 127, 127, 0.02); border: 1px solid rgba(251, 191, 36, 0.1); }
+    .talisman-icon { font-size: 50px; margin-bottom: 15px; }
     #fortune-msg { font-size: 18px; line-height: 1.6; margin-bottom: 20px; font-weight: 600; }
 
     .btn { width: 100%; padding: 18px; border-radius: 18px; font-weight: 800; border: none; cursor: pointer; transition: 0.3s; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
@@ -61,24 +49,23 @@
     .btn-green { background: var(--accent); color: #fff; }
     .btn-outline { background: none; border: 1px solid var(--sub); color: var(--sub); font-size: 14px; padding: 10px; margin-top: 10px; }
 
-    /* 사운드 컨트롤러 */
-    .sound-ctrl { position: absolute; top: 20px; left: 30px; background: none; border: none; color: var(--sub); cursor: pointer; font-size: 18px; }
+    .sound-ctrl { position: absolute; top: 20px; left: 30px; background: none; border: none; color: var(--sub); cursor: pointer; font-size: 18px; z-index: 10; }
 
     .footer-btns { display: flex; gap: 12px; margin-top: 20px; }
-    .btn-footer { flex: 1; background: rgba(255,255,255,0.05); color: var(--sub); font-size: 14px; padding: 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-footer { flex: 1; background: rgba(127,127,127,0.05); color: var(--sub); font-size: 14px; padding: 12px; border-radius: 15px; border: 1px solid rgba(127,127,127,0.1); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; }
     
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
-<body>
+<body onclick="startBgmOnFirstClick()">
   <div class="container">
     <div class="card">
-      <button class="sound-ctrl" onclick="toggleSound()" id="sound-btn">🔇</button>
+      <button class="sound-ctrl" onclick="toggleSound(event)" id="sound-btn">🔊</button>
       <div class="live-badge"><div class="dot"></div><span id="live-count">12</span> LIVE</div>
       
       <h1>PAUSE 10</h1>
-      <p class="desc" id="lbl-desc">잠시 멈춤이 당신의 가치를 만듭니다.</p>
+      <p id="lbl-desc" style="font-size: 14px; color: var(--sub); margin-bottom: 25px;"></p>
 
       <div class="stats-row">
         <div class="stat-item"><span id="lbl-rank">RANK</span><strong id="grade-txt">-</strong></div>
@@ -97,13 +84,15 @@
       <a id="btn-promo" href="https://docs.google.com/forms/..." target="_blank" class="btn btn-gold"></a>
       
       <div class="footer-btns">
-        <a href="javascript:history.back()" class="btn-footer">↩ <span id="lbl-back">Back</span></a>
-        <a href="https://www.buymeacoffee.com/pause10" target="_blank" class="btn-footer">☕ <span id="lbl-coffee">Coffee</span></a>
+        <a href="javascript:history.back()" class="btn-footer">↩ <span id="lbl-back"></span></a>
+        <a href="https://www.buymeacoffee.com/pause10" target="_blank" class="btn-footer">☕ <span id="lbl-coffee"></span></a>
       </div>
     </div>
   </div>
 
-  <audio id="bgm" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+  <audio id="bgm" loop autoplay>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+  </audio>
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
@@ -123,20 +112,26 @@
     document.getElementById('lbl-back').innerText = cur.back;
     document.getElementById('lbl-coffee').innerText = cur.coffee;
 
-    // 1. 라이브 접속자 시뮬레이션
+    // 🎹 사운드 컨트롤
+    const bgm = document.getElementById('bgm');
+    bgm.volume = 0.2; // 볼륨 낮춤
+
+    function startBgmOnFirstClick() {
+      if(bgm.paused) { bgm.play(); }
+    }
+
+    function toggleSound(e) {
+      e.stopPropagation(); // body 클릭 이벤트 전파 방지
+      if(bgm.paused) { bgm.play(); document.getElementById('sound-btn').innerText = "🔊"; }
+      else { bgm.pause(); document.getElementById('sound-btn').innerText = "🔇"; }
+    }
+
+    // [기존 실시간 타이머, 접속자 카운트, 번호 생성 로직 유지]
     setInterval(() => {
       const count = Math.floor(Math.random() * (25 - 8) + 8);
       document.getElementById('live-count').innerText = count;
     }, 5000);
 
-    // 2. 사운드 토글
-    const bgm = document.getElementById('bgm');
-    function toggleSound() {
-      if(bgm.paused) { bgm.play(); document.getElementById('sound-btn').innerText = "🔊"; }
-      else { bgm.pause(); document.getElementById('sound-btn').innerText = "🔇"; }
-    }
-
-    // 3. 라이브 타이머 & 로컬 스토리지
     let totalSaved = parseInt(localStorage.getItem('pause_total_time') || 0);
     let sessionStart = Date.now();
 
@@ -144,29 +139,25 @@
       let now = Date.now();
       let sessionElapsed = Math.floor((now - sessionStart) / 1000);
       let displayTime = totalSaved + sessionElapsed;
-      
       let h = String(Math.floor(displayTime / 3600)).padStart(2, '0');
       let m = String(Math.floor((displayTime % 3600) / 60)).padStart(2, '0');
       let s = String(displayTime % 60).padStart(2, '0');
       document.getElementById('time-txt').innerText = `${h}:${m}:${s}`;
-
       const idx = Math.min(Math.floor(displayTime / 30), 4);
       document.getElementById('grade-txt').innerText = cur.grades[idx];
       localStorage.setItem('pause_total_time', displayTime);
     }
     setInterval(updateLiveTimer, 1000);
 
-    // 4. 행운의 번호 및 콘텐츠 노출
     const fortuneData = [
-      { icon: "🍀", ko: "인내는 쓰고 열매는 답니다.", en: "Patience is bitter, but its fruit is sweet.", ja: "忍耐は苦い、しかしその実は甘い。" },
-      { icon: "💰", ko: "멈춘 10초가 오늘의 금전운을 부릅니다.", en: "The 10s you paused brings wealth.", ja: "10秒の誘惑に勝ったあなたに金運を。" }
+      { icon: "🍀", ko: "인내는 쓰고 열매는 답니다.", en: "Patience is bitter, but its fruit is sweet." },
+      { icon: "💰", ko: "멈춘 10초가 오늘의 금전운을 부릅니다.", en: "The 10s you paused brings wealth." }
     ];
     while(fortuneData.length < 30) { fortuneData.push(fortuneData[fortuneData.length % 2]); }
 
     const nums = [];
     while(nums.length < 6) { let r = Math.floor(Math.random() * 45) + 1; if(!nums.includes(r)) nums.push(r); }
     nums.sort((a,b) => a-b);
-
     const container = document.getElementById('ball-container');
     nums.forEach((n, i) => {
       setTimeout(() => {
@@ -185,7 +176,6 @@
       document.getElementById('talisman-icon').innerText = luck.icon;
       document.getElementById('fortune-msg').innerText = luck[lang] || luck.ko;
     }
-
     function completeMission() { alert(lang === 'ko' ? "경험치 추가 상승!" : "Bonus Exp Up!"); }
     function shareLuck() { 
       const time = document.getElementById('time-txt').innerText;

@@ -12,39 +12,40 @@
     body { background: var(--bg); color: var(--text); font-family: 'Pretendard', sans-serif; 
       margin: 0; padding: 40px 20px; box-sizing: border-box; display: flex; justify-content: center; min-height: 100vh; }
     
-    /* 폭 1.5배 확대 및 테두리 두께 50% 축소 */
-    .container { max-width: 600px; width: 100%; } /* 기존 400~450px에서 600px로 확대 */
+    /* 폭 600px로 확대 (기존의 1.5배) */
+    .container { max-width: 600px; width: 100%; }
     
     .card { background: var(--card); padding: 40px 30px; border-radius: 40px; 
-      border: 0.3px solid transparent; /* 테두리 두께를 2px에서 1px로 축소 */
-      background-image: linear-gradient(var(--card), var(--card)), radial-gradient(circle at top left, rgba(251, 191, 36, 0.5), rgba(120, 53, 15, 0.3));
-      background-origin: border-box; background-clip: content-box, border-box;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.6); position: relative; width: 100%; box-sizing: border-box; }
+      /* 테두리를 0.5px로 아주 가늘게 설정 */
+      border: 0.5px solid rgba(251, 191, 36, 0.3);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 10px rgba(251, 191, 36, 0.05); 
+      position: relative; width: 100%; box-sizing: border-box; overflow: hidden; }
 
     h1 { color: var(--gold); font-size: 36px; font-weight: 900; margin: 0 0 15px; letter-spacing: -1.5px; }
 
+    /* 스탯 영역: 실시간 타이머 강조 */
     .stats-row { display: flex; justify-content: space-between; margin-bottom: 30px; padding: 20px 40px; 
       background: rgba(255,255,255,0.03); border-radius: 20px; border: 1px solid rgba(251, 191, 36, 0.1); }
     .stat-item span { display: block; font-size: 12px; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px; }
-    .stat-item strong { font-size: 20px; color: var(--gold); font-weight: 800; }
+    .stat-item strong { font-size: 22px; color: var(--gold); font-weight: 800; font-variant-numeric: tabular-nums; }
 
     .ball-container { display: flex; gap: 15px; justify-content: center; margin: 35px 0; flex-wrap: wrap; }
     .ball { width: 60px; height: 60px; border-radius: 18px; display: flex; align-items: center; justify-content: center;
-      font-weight: 800; background: #0f172a; border: 1.5px solid rgba(251, 191, 36, 0.4); color: var(--gold); font-size: 24px;
+      font-weight: 800; background: #0f172a; border: 1px solid rgba(251, 191, 36, 0.3); color: var(--gold); font-size: 24px;
       opacity: 0; transform: scale(0.5); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .ball.show { opacity: 1; transform: scale(1); }
 
     .content-box { display: none; animation: fadeInUp 0.8s ease-out; }
-    #fortune-box { margin-top: 30px; padding: 35px; border-radius: 30px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(251, 191, 36, 0.2); backdrop-filter: blur(10px); }
+    #fortune-box { margin-top: 30px; padding: 35px; border-radius: 30px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(251, 191, 36, 0.15); }
     .talisman-icon { font-size: 55px; margin-bottom: 15px; filter: drop-shadow(0 0 10px var(--gold)); }
     #fortune-msg { font-size: 20px; line-height: 1.6; margin-bottom: 25px; color: #fff; font-weight: 600; }
 
-    #mission-box { margin-top: 25px; padding: 25px; background: rgba(16, 185, 129, 0.08); border-radius: 25px; border: 1px dashed var(--accent); }
-    #mission-txt { font-size: 17px; margin-bottom: 15px; color: #e2e8f0; line-height: 1.5; }
+    #mission-box { margin-top: 25px; padding: 25px; background: rgba(16, 185, 129, 0.05); border-radius: 25px; border: 1px dashed var(--accent); }
+    #mission-txt { font-size: 17px; margin-bottom: 15px; color: #e2e8f0; }
 
     .btn { width: 100%; padding: 20px; border-radius: 20px; font-weight: 800; border: none; cursor: pointer; transition: 0.3s; font-size: 18px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
-    .btn-gold { background: linear-gradient(145deg, var(--gold), var(--gold-dark)); color: #000; margin: 35px 0 15px; box-shadow: 0 10px 20px rgba(251, 191, 36, 0.2); }
-    .btn-green { background: var(--accent); color: #fff; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2); }
+    .btn-gold { background: linear-gradient(145deg, var(--gold), var(--gold-dark)); color: #000; margin: 35px 0 15px; }
+    .btn-green { background: var(--accent); color: #fff; }
     .btn-outline { background: none; border: 1px solid #334155; color: #64748b; font-size: 15px; padding: 12px; }
 
     .footer-btns { display: flex; gap: 15px; margin-top: 25px; }
@@ -62,17 +63,19 @@
         <div class="stat-item"><span id="lbl-reclaimed">RECLAIMED</span><strong id="time-txt">00:00:00</strong></div>
       </div>
       <div class="ball-container" id="ball-container"></div>
+      
       <div id="fortune-box" class="content-box">
         <div class="talisman-icon" id="talisman-icon">🔮</div>
         <p id="fortune-msg"></p>
         <button id="btn-share" class="btn btn-green" onclick="shareLuck()"></button>
       </div>
+
       <div id="mission-box" class="content-box">
         <p id="mission-txt"></p>
         <button id="btn-mission" class="btn btn-outline" onclick="completeMission()"></button>
       </div>
       
-      <a id="btn-promo" href="https://docs.google.com/forms/d/e/1FAIpQLSchezD_hdqkjGXVTCqM8JaL02IEP8fAoK9GJ57FnB54L5Ql4Q/viewform?usp=header" target="_blank" class="btn btn-gold"></a>
+      <a id="btn-promo" href="https://docs.google.com/forms/..." target="_blank" class="btn btn-gold"></a>
       
       <div class="footer-btns">
         <a href="javascript:history.back()" class="btn-footer">↩ <span id="lbl-back">Back</span></a>
@@ -80,16 +83,18 @@
       </div>
     </div>
   </div>
+
   <script>
-    // [기존 30개 문구 및 다국어 로직 동일 적용]
     const urlParams = new URLSearchParams(window.location.search);
     const lang = (urlParams.get("lang") || "ko").toLowerCase();
     const i18n = {
       ko: { rank: "등급", reclaimed: "되찾은 시간", share: "📱 행운 공유하기", mission: "🎯 미션", missionBtn: "미션 완료!", promo: "앱 출시 사전예약 신청", grades: ["인내의 초보", "시간 관리자", "도파민 헌터", "자유인", "파우즈 마스터"], back: "뒤로", coffee: "커피 후원" },
-      en: { rank: "RANK", reclaimed: "RECLAIMED", share: "📱 Share Luck", mission: "🎯 Mission", missionBtn: "Mission Done!", promo: "Pre-register Now", grades: ["Novice Pauser", "Time Manager", "Dopamine Hunter", "Free Spirit", "Pause Master"], back: "Back", coffee: "Buy Coffee" },
+      en: { rank: "RANK", reclaimed: "RECLAIMED", share: "📱 Share Luck", mission: "🎯 Mission", missionBtn: "Mission Done!", promo: "Pre-register Now", grades: ["Novice", "Manager", "Hunter", "Free Spirit", "Master"], back: "Back", coffee: "Buy Coffee" },
       ja: { rank: "ランク", reclaimed: "節約した時間", share: "📱 幸運をシェア", mission: "🎯 ミッション", missionBtn: "ミッション完了！", promo: "事前予約する", grades: ["初心者", "管理者", "ハンター", "自由人", "マスター"], back: "戻る", coffee: "コーヒーを贈る" }
     };
     const cur = i18n[lang] || i18n.ko;
+
+    // 초기 텍스트 세팅
     document.getElementById('lbl-rank').innerText = cur.rank;
     document.getElementById('lbl-reclaimed').innerText = cur.reclaimed;
     document.getElementById('btn-share').innerText = cur.share;
@@ -98,21 +103,37 @@
     document.getElementById('lbl-back').innerText = cur.back;
     document.getElementById('lbl-coffee').innerText = cur.coffee;
 
+    // 라이브 타이머 로직
+    let totalSaved = parseInt(localStorage.getItem('pause_total_time') || 0);
+    let sessionStart = Date.now();
+
+    function updateLiveTimer() {
+      let now = Date.now();
+      let sessionElapsed = Math.floor((now - sessionStart) / 1000);
+      let displayTime = totalSaved + sessionElapsed;
+      
+      let h = String(Math.floor(displayTime / 3600)).padStart(2, '0');
+      let m = String(Math.floor((displayTime % 3600) / 60)).padStart(2, '0');
+      let s = String(displayTime % 60).padStart(2, '0');
+      document.getElementById('time-txt').innerText = `${h}:${m}:${s}`;
+
+      // 등급 실시간 업데이트 (5초당 1경험치 기준)
+      const idx = Math.min(Math.floor(displayTime / 30), 4);
+      document.getElementById('grade-txt').innerText = cur.grades[idx];
+
+      // 브라우저 닫기 전에 저장하기 위해 계속 업데이트 (또는 주기적 저장)
+      localStorage.setItem('pause_total_time', displayTime);
+    }
+
+    // 1초마다 타이머 갱신
+    setInterval(updateLiveTimer, 1000);
+
     const fortuneData = [
-      { icon: "🍀", ko: "인내는 쓰고 열매는 답니다. 오늘 그 열매를 확인하세요!", en: "Patience is bitter, but its fruit is sweet.", ja: "忍耐は苦い、しかしその実は甘い。", mi: { ko: "물 한 잔 마시고 심호흡 하기", en: "Drink water and breathe", ja: "水を飲んで深呼吸" } },
-      { icon: "💰", ko: "멈춘 10초가 당신에게 금전운을 부릅니다.", en: "The 10s you paused brings wealth.", ja: "10秒の誘惑に勝ったあなた에金運を。", mi: { ko: "가장 소중한 사람에게 연락하기", en: "Call your loved one", ja: "大切な人に連絡する" } }
+      { icon: "🍀", ko: "인내는 쓰고 열매는 답니다. 지금 당신의 시간이 쌓이고 있습니다.", en: "Patience is bitter, but your time is growing now.", ja: "忍耐は苦い、しかしあなたの時間は今積み重なっています。", mi: { ko: "물 한 잔 마시기", en: "Drink water", ja: "水を飲む" } },
+      { icon: "💰", ko: "멈춘 10초가 오늘의 금전운을 부릅니다.", en: "The 10s you paused brings wealth today.", ja: "立ち止まった10秒が今日の金運を呼び寄せます。", mi: { ko: "심호흡 3번 하기", en: "3 deep breaths", ja: "深呼吸3回" } }
     ];
     while(fortuneData.length < 30) { fortuneData.push(fortuneData[fortuneData.length % 2]); }
 
-    let count = parseInt(localStorage.getItem('pause_total_count') || 0);
-    function initStats() {
-      const idx = Math.min(Math.floor(count / 5), 4);
-      document.getElementById('grade-txt').innerText = cur.grades[idx];
-      let totalSec = count * 10;
-      let m = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0');
-      let s = String(totalSec % 60).padStart(2, '0');
-      document.getElementById('time-txt').innerText = `00:${m}:${s}`;
-    }
     const nums = [];
     while(nums.length < 6) { let r = Math.floor(Math.random() * 45) + 1; if(!nums.includes(r)) nums.push(r); }
     nums.sort((a,b) => a-b);
@@ -124,22 +145,21 @@
         if(i === 5) { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); setTimeout(showFortune, 500); }
       }, i * 250);
     });
+
     function showFortune() {
       const luck = fortuneData[Math.floor(Math.random() * fortuneData.length)];
       document.querySelectorAll('.content-box').forEach(el => el.style.display = 'block');
       document.getElementById('talisman-icon').innerText = luck.icon;
       document.getElementById('fortune-msg').innerText = luck[lang] || luck.ko;
       document.getElementById('mission-txt').innerText = `${cur.mission}: ${luck.mi[lang] || luck.mi.ko}`;
-      count++; localStorage.setItem('pause_total_count', count); initStats();
     }
-    function completeMission() { alert(lang === 'ko' ? "경험치 상승!" : "Exp Up!"); }
+
+    function completeMission() { alert(lang === 'ko' ? "경험치 추가 상승!" : "Bonus Exp Up!"); }
     function shareLuck() { 
-      const msg = `[Pause10] Lucky: ${nums.join(", ")}\nLuck: ${document.getElementById('fortune-msg').innerText}\nbiniare-del.github.io/pause10`;
+      const time = document.getElementById('time-txt').innerText;
+      const msg = `[Pause10] Reclaimed Time: ${time}\nLucky Numbers: ${nums.join(", ")}\nbiniare-del.github.io/pause10`;
       navigator.clipboard.writeText(msg).then(() => alert(lang === 'ko' ? "복사 완료!" : "Copied!"));
     }
-    initStats();
   </script>
 </body>
 </html>
-
-

@@ -2,79 +2,98 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Pause10 - Reclaim Your Time</title>
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3563/3563395.png">
+  
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-    :root { --gold: #fbbf24; --gold-dark: #d97706; --bg: #0b0f1a; --card: #161e2d; --text: #f8fafc; --accent: #10b981; }
+    :root { 
+      --gold: #fbbf24; --gold-dark: #d97706; --bg: #0b0f1a; --card: #161e2d; 
+      --text: #f8fafc; --accent: #10b981; --sub: #94a3b8;
+    }
     
+    /* 시스템 설정에 따른 라이트 모드 대응 (미세 조정) */
+    @media (prefers-color-scheme: light) {
+      :root { --bg: #f1f5f9; --card: #ffffff; --text: #1e293b; --sub: #64748b; }
+    }
+
     body { background: var(--bg); color: var(--text); font-family: 'Pretendard', sans-serif; 
-      margin: 0; padding: 40px 20px; box-sizing: border-box; display: flex; justify-content: center; min-height: 100vh; }
+      margin: 0; padding: 20px; box-sizing: border-box; display: flex; justify-content: center; min-height: 100vh; transition: 0.3s; }
     
-    /* 폭 600px로 확대 (기존의 1.5배) */
     .container { max-width: 600px; width: 100%; }
     
     .card { background: var(--card); padding: 40px 30px; border-radius: 40px; 
-      /* 테두리를 0.5px로 아주 가늘게 설정 */
-      border: 0.5px solid rgba(251, 191, 36, 0.3);
-      box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 10px rgba(251, 191, 36, 0.05); 
-      position: relative; width: 100%; box-sizing: border-box; overflow: hidden; }
+      border: 1px solid rgba(251, 191, 36, 0.2);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5); position: relative; width: 100%; box-sizing: border-box; overflow: hidden; }
 
-    h1 { color: var(--gold); font-size: 36px; font-weight: 900; margin: 0 0 15px; letter-spacing: -1.5px; }
+    /* 실시간 접속자 배지 */
+    .live-badge { position: absolute; top: 20px; right: 30px; background: rgba(16, 185, 129, 0.1); 
+      color: var(--accent); padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; gap: 5px; animation: pulse 2s infinite; }
+    .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
 
-    /* 스탯 영역: 실시간 타이머 강조 */
+    h1 { color: var(--gold); font-size: 32px; font-weight: 900; margin: 0 0 10px; letter-spacing: -1.5px; }
+    .desc { font-size: 14px; color: var(--sub); margin-bottom: 25px; }
+
     .stats-row { display: flex; justify-content: space-between; margin-bottom: 30px; padding: 20px 40px; 
-      background: rgba(255,255,255,0.03); border-radius: 20px; border: 1px solid rgba(251, 191, 36, 0.1); }
-    .stat-item span { display: block; font-size: 12px; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px; }
-    .stat-item strong { font-size: 22px; color: var(--gold); font-weight: 800; font-variant-numeric: tabular-nums; }
+      background: rgba(255,255,255,0.03); border-radius: 25px; border: 1px solid rgba(251, 191, 36, 0.1); }
+    .stat-item span { display: block; font-size: 11px; color: var(--sub); text-transform: uppercase; margin-bottom: 5px; }
+    .stat-item strong { font-size: 22px; color: var(--gold); font-weight: 800; }
 
-    .ball-container { display: flex; gap: 15px; justify-content: center; margin: 35px 0; flex-wrap: wrap; }
-    .ball { width: 60px; height: 60px; border-radius: 18px; display: flex; align-items: center; justify-content: center;
-      font-weight: 800; background: #0f172a; border: 1px solid rgba(251, 191, 36, 0.3); color: var(--gold); font-size: 24px;
+    .ball-container { display: flex; gap: 12px; justify-content: center; margin: 30px 0; flex-wrap: wrap; }
+    .ball { width: 55px; height: 55px; border-radius: 16px; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(251, 191, 36, 0.2); color: var(--gold); font-size: 22px;
       opacity: 0; transform: scale(0.5); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .ball.show { opacity: 1; transform: scale(1); }
 
     .content-box { display: none; animation: fadeInUp 0.8s ease-out; }
-    #fortune-box { margin-top: 30px; padding: 35px; border-radius: 30px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(251, 191, 36, 0.15); }
-    .talisman-icon { font-size: 55px; margin-bottom: 15px; filter: drop-shadow(0 0 10px var(--gold)); }
-    #fortune-msg { font-size: 20px; line-height: 1.6; margin-bottom: 25px; color: #fff; font-weight: 600; }
+    #fortune-box { margin-top: 20px; padding: 30px; border-radius: 30px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(251, 191, 36, 0.1); }
+    .talisman-icon { font-size: 50px; margin-bottom: 10px; }
+    #fortune-msg { font-size: 18px; line-height: 1.6; margin-bottom: 20px; font-weight: 600; }
 
-    #mission-box { margin-top: 25px; padding: 25px; background: rgba(16, 185, 129, 0.05); border-radius: 25px; border: 1px dashed var(--accent); }
-    #mission-txt { font-size: 17px; margin-bottom: 15px; color: #e2e8f0; }
-
-    .btn { width: 100%; padding: 20px; border-radius: 20px; font-weight: 800; border: none; cursor: pointer; transition: 0.3s; font-size: 18px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
-    .btn-gold { background: linear-gradient(145deg, var(--gold), var(--gold-dark)); color: #000; margin: 35px 0 15px; }
+    .btn { width: 100%; padding: 18px; border-radius: 18px; font-weight: 800; border: none; cursor: pointer; transition: 0.3s; font-size: 16px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
+    .btn-gold { background: linear-gradient(145deg, var(--gold), var(--gold-dark)); color: #000; margin: 30px 0 10px; }
     .btn-green { background: var(--accent); color: #fff; }
-    .btn-outline { background: none; border: 1px solid #334155; color: #64748b; font-size: 15px; padding: 12px; }
+    .btn-outline { background: none; border: 1px solid var(--sub); color: var(--sub); font-size: 14px; padding: 10px; margin-top: 10px; }
 
-    .footer-btns { display: flex; gap: 15px; margin-top: 25px; }
-    .btn-footer { flex: 1; background: rgba(255,255,255,0.05); color: #94a3b8; font-size: 15px; padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    /* 사운드 컨트롤러 */
+    .sound-ctrl { position: absolute; top: 20px; left: 30px; background: none; border: none; color: var(--sub); cursor: pointer; font-size: 18px; }
+
+    .footer-btns { display: flex; gap: 12px; margin-top: 20px; }
+    .btn-footer { flex: 1; background: rgba(255,255,255,0.05); color: var(--sub); font-size: 14px; padding: 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; }
     
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="card">
+      <button class="sound-ctrl" onclick="toggleSound()" id="sound-btn">🔇</button>
+      <div class="live-badge"><div class="dot"></div><span id="live-count">12</span> LIVE</div>
+      
       <h1>PAUSE 10</h1>
+      <p class="desc" id="lbl-desc">잠시 멈춤이 당신의 가치를 만듭니다.</p>
+
       <div class="stats-row">
         <div class="stat-item"><span id="lbl-rank">RANK</span><strong id="grade-txt">-</strong></div>
         <div class="stat-item"><span id="lbl-reclaimed">RECLAIMED</span><strong id="time-txt">00:00:00</strong></div>
       </div>
+
       <div class="ball-container" id="ball-container"></div>
       
       <div id="fortune-box" class="content-box">
         <div class="talisman-icon" id="talisman-icon">🔮</div>
         <p id="fortune-msg"></p>
         <button id="btn-share" class="btn btn-green" onclick="shareLuck()"></button>
-      </div>
-
-      <div id="mission-box" class="content-box">
-        <p id="mission-txt"></p>
         <button id="btn-mission" class="btn btn-outline" onclick="completeMission()"></button>
       </div>
-      
+
       <a id="btn-promo" href="https://docs.google.com/forms/..." target="_blank" class="btn btn-gold"></a>
       
       <div class="footer-btns">
@@ -84,17 +103,18 @@
     </div>
   </div>
 
+  <audio id="bgm" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const lang = (urlParams.get("lang") || "ko").toLowerCase();
     const i18n = {
-      ko: { rank: "등급", reclaimed: "되찾은 시간", share: "📱 행운 공유하기", mission: "🎯 미션", missionBtn: "미션 완료!", promo: "앱 출시 사전예약 신청", grades: ["인내의 초보", "시간 관리자", "도파민 헌터", "자유인", "파우즈 마스터"], back: "뒤로", coffee: "커피 후원" },
-      en: { rank: "RANK", reclaimed: "RECLAIMED", share: "📱 Share Luck", mission: "🎯 Mission", missionBtn: "Mission Done!", promo: "Pre-register Now", grades: ["Novice", "Manager", "Hunter", "Free Spirit", "Master"], back: "Back", coffee: "Buy Coffee" },
-      ja: { rank: "ランク", reclaimed: "節約した時間", share: "📱 幸運をシェア", mission: "🎯 ミッション", missionBtn: "ミッション完了！", promo: "事前予約する", grades: ["初心者", "管理者", "ハンター", "自由人", "マスター"], back: "戻る", coffee: "コーヒーを贈る" }
+      ko: { desc: "잠시 멈춤이 당신의 가치를 만듭니다.", rank: "등급", reclaimed: "되찾은 시간", share: "📱 행운 공유하기", missionBtn: "🎯 오늘의 미션 완료", promo: "앱 출시 사전예약 신청", grades: ["인내의 초보", "시간 관리자", "도파민 헌터", "자유인", "파우즈 마스터"], back: "뒤로", coffee: "커피 후원" },
+      en: { desc: "Your pause defines your value.", rank: "RANK", reclaimed: "RECLAIMED", share: "📱 Share Luck", missionBtn: "🎯 Complete Mission", promo: "Pre-register Now", grades: ["Novice", "Manager", "Hunter", "Free Spirit", "Master"], back: "Back", coffee: "Buy Coffee" }
     };
     const cur = i18n[lang] || i18n.ko;
 
-    // 초기 텍스트 세팅
+    document.getElementById('lbl-desc').innerText = cur.desc;
     document.getElementById('lbl-rank').innerText = cur.rank;
     document.getElementById('lbl-reclaimed').innerText = cur.reclaimed;
     document.getElementById('btn-share').innerText = cur.share;
@@ -103,7 +123,20 @@
     document.getElementById('lbl-back').innerText = cur.back;
     document.getElementById('lbl-coffee').innerText = cur.coffee;
 
-    // 라이브 타이머 로직
+    // 1. 라이브 접속자 시뮬레이션
+    setInterval(() => {
+      const count = Math.floor(Math.random() * (25 - 8) + 8);
+      document.getElementById('live-count').innerText = count;
+    }, 5000);
+
+    // 2. 사운드 토글
+    const bgm = document.getElementById('bgm');
+    function toggleSound() {
+      if(bgm.paused) { bgm.play(); document.getElementById('sound-btn').innerText = "🔊"; }
+      else { bgm.pause(); document.getElementById('sound-btn').innerText = "🔇"; }
+    }
+
+    // 3. 라이브 타이머 & 로컬 스토리지
     let totalSaved = parseInt(localStorage.getItem('pause_total_time') || 0);
     let sessionStart = Date.now();
 
@@ -117,47 +150,46 @@
       let s = String(displayTime % 60).padStart(2, '0');
       document.getElementById('time-txt').innerText = `${h}:${m}:${s}`;
 
-      // 등급 실시간 업데이트 (5초당 1경험치 기준)
       const idx = Math.min(Math.floor(displayTime / 30), 4);
       document.getElementById('grade-txt').innerText = cur.grades[idx];
-
-      // 브라우저 닫기 전에 저장하기 위해 계속 업데이트 (또는 주기적 저장)
       localStorage.setItem('pause_total_time', displayTime);
     }
-
-    // 1초마다 타이머 갱신
     setInterval(updateLiveTimer, 1000);
 
+    // 4. 행운의 번호 및 콘텐츠 노출
     const fortuneData = [
-      { icon: "🍀", ko: "인내는 쓰고 열매는 답니다. 지금 당신의 시간이 쌓이고 있습니다.", en: "Patience is bitter, but your time is growing now.", ja: "忍耐は苦い、しかしあなたの時間は今積み重なっています。", mi: { ko: "물 한 잔 마시기", en: "Drink water", ja: "水を飲む" } },
-      { icon: "💰", ko: "멈춘 10초가 오늘의 금전운을 부릅니다.", en: "The 10s you paused brings wealth today.", ja: "立ち止まった10秒が今日の金運を呼び寄せます。", mi: { ko: "심호흡 3번 하기", en: "3 deep breaths", ja: "深呼吸3回" } }
+      { icon: "🍀", ko: "인내는 쓰고 열매는 답니다.", en: "Patience is bitter, but its fruit is sweet.", ja: "忍耐は苦い、しかしその実は甘い。" },
+      { icon: "💰", ko: "멈춘 10초가 오늘의 금전운을 부릅니다.", en: "The 10s you paused brings wealth.", ja: "10秒の誘惑に勝ったあなたに金運を。" }
     ];
     while(fortuneData.length < 30) { fortuneData.push(fortuneData[fortuneData.length % 2]); }
 
     const nums = [];
     while(nums.length < 6) { let r = Math.floor(Math.random() * 45) + 1; if(!nums.includes(r)) nums.push(r); }
     nums.sort((a,b) => a-b);
+
     const container = document.getElementById('ball-container');
     nums.forEach((n, i) => {
       setTimeout(() => {
         const ball = document.createElement('div'); ball.className = 'ball'; ball.innerText = n;
         container.appendChild(ball); setTimeout(() => ball.classList.add('show'), 10);
-        if(i === 5) { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); setTimeout(showFortune, 500); }
+        if(i === 5) { 
+          confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#fbbf24', '#ffffff'] }); 
+          setTimeout(showFortune, 800); 
+        }
       }, i * 250);
     });
 
     function showFortune() {
       const luck = fortuneData[Math.floor(Math.random() * fortuneData.length)];
-      document.querySelectorAll('.content-box').forEach(el => el.style.display = 'block');
+      document.getElementById('fortune-box').style.display = 'block';
       document.getElementById('talisman-icon').innerText = luck.icon;
       document.getElementById('fortune-msg').innerText = luck[lang] || luck.ko;
-      document.getElementById('mission-txt').innerText = `${cur.mission}: ${luck.mi[lang] || luck.mi.ko}`;
     }
 
     function completeMission() { alert(lang === 'ko' ? "경험치 추가 상승!" : "Bonus Exp Up!"); }
     function shareLuck() { 
       const time = document.getElementById('time-txt').innerText;
-      const msg = `[Pause10] Reclaimed Time: ${time}\nLucky Numbers: ${nums.join(", ")}\nbiniare-del.github.io/pause10`;
+      const msg = `[Pause10] Reclaimed Time: ${time}\nLucky: ${nums.join(", ")}\nbiniare-del.github.io/pause10`;
       navigator.clipboard.writeText(msg).then(() => alert(lang === 'ko' ? "복사 완료!" : "Copied!"));
     }
   </script>

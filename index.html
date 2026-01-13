@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Pause10 - Stop Before Shorts</title>
+  <title>Pause10 - Reclaim Your Time</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
@@ -27,24 +27,13 @@
     #fortune-box { display: none; margin-top: 25px; padding: 30px; border-radius: 35px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(251, 191, 36, 0.15); }
     #mission-txt { color: var(--accent); font-weight: 700; font-size: 16px; margin: 12px 0 25px; display: block; }
     .btn { width: 100%; padding: 20px; border-radius: 20px; font-weight: 800; border: none; cursor: pointer; font-size: 17px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-sizing: border-box; transition: 0.2s; }
-    .btn-gold { background: var(--gold); color: #000; margin: 25px 0; }
+    .btn-gold { background: var(--gold); color: #000; margin: 25px 0; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2); }
     .btn-green { background: var(--accent); color: #fff; margin-bottom: 15px; }
     .footer-btns { display: flex; gap: 12px; margin-top: 10px; }
     .btn-footer { flex: 1; background: rgba(255, 255, 255, 0.06); color: var(--sub); font-size: 13px; padding: 18px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
-    #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; box-sizing: border-box; }
-    .pop-card { border: 2.5px solid var(--gold); border-radius: 45px; padding: 45px; background: #000; width: 90%; max-width: 440px; }
   </style>
 </head>
 <body>
-  <div id="overlay">
-    <div class="pop-card">
-      <h2 id="pop-title" style="color:var(--gold); margin-bottom:15px; font-size:26px;"></h2>
-      <p id="pop-desc" style="color:#ccc; line-height:1.7; margin-bottom:25px; font-size:16px;"></p>
-      <div id="countdown-num" style="font-size:90px; font-weight:900; color:var(--gold); margin:25px 0;">10</div>
-      <button id="pop-back" onclick="history.back()" style="background:none; border:none; color:var(--sub); text-decoration:underline; cursor:pointer; font-size:15px;"></button>
-    </div>
-  </div>
-
   <div class="container">
     <div class="card">
       <div class="header-badges">
@@ -52,7 +41,7 @@
         <div class="live-badge"><div class="dot"></div><span id="live-count">24</span> LIVE</div>
       </div>
       <div class="timer-section">
-        <span id="user-nickname"></span>
+        <span id="user-nickname">도파민 입문자</span>
         <p class="timer-label" id="lbl-reclaimed"></p>
         <div class="timer-value" id="time-txt">00:00:00</div>
       </div>
@@ -67,7 +56,9 @@
         <span id="mission-txt"></span>
         <button id="btn-share" class="btn btn-green" onclick="shareLuck()"></button>
       </div>
-      <a id="btn-promo" href="https://forms.gle/vPshj1A3s8S128fV6" target="_blank" class="btn btn-gold"></a>
+      
+      <a id="btn-promo" href="https://forms.gle/usmPpBsGidPQaYY99" target="_blank" class="btn btn-gold"></a>
+      
       <div class="footer-btns">
         <a href="javascript:history.back()" class="btn-footer"><span id="lbl-back"></span></a>
         <a href="https://www.buymeacoffee.com/pause10" target="_blank" class="btn-footer">☕ <span id="lbl-coffee"></span></a>
@@ -80,35 +71,28 @@
     let lang = urlParams.get("lang") || navigator.language.split('-')[0] || "ko";
     const i18n = {
       ko: {
-        popTitle: "도파민 탈출까지 10초", popDesc: "쇼츠, 릴스, 틱톡에 절여진 뇌를 씻어내는 중..<br>지금 이 10초가 당신의 오늘을 바꿉니다.", popBack: "↩ 그냥 쇼츠 보러 가기",
-        reclaimed: "내가 되찾은 소중한 시간", desc: "쇼츠, 릴스, 틱톡의 도파민에 절여진 당신..<br>탈출할 기회와 행운을 동시에 드립니다.", lottoName: "동행복권 6/45",
-        share: "📱 행운 공유하기", promo: "앱 출시 사전예약 신청", back: "뒤로", coffee: "커피 후원", missionHead: "오늘의 미션: ", copied: "행운이 복사되었습니다!",
+        reclaimed: "내가 되찾은 소중한 시간", desc: "도파민의 유혹을 참아낸 당신을 칭찬합니다.<br>이 시간이 쌓여 당신의 인생을 바꿉니다.", lottoName: "동행복권 6/45",
+        share: "📱 행운 공유하기", promo: "앱 출시 사전예약 신청", back: "뒤로", coffee: "커피 후원", missionHead: "오늘의 미션: ", copied: "복사 완료!",
         rules: { count: 6, max: 45, special: false }, nicknames: ["도파민 입문자", "절제 꿈나무", "시간 관리자", "뇌 정화 마스터", "갓생 설계자"]
       },
       en: {
-        popTitle: "10s to Escape Dopamine", popDesc: "Refreshing your brain from dopamine loops..<br>These 10 seconds will change your day.", popBack: "↩ Back to Shorts",
-        reclaimed: "Time Reclaimed", desc: "Escape the dopamine loop.<br>Reclaim your time and find your luck.", lottoName: "Powerball Numbers",
+        reclaimed: "Time Reclaimed", desc: "Proud of you for resisting dopamine loops.<br>Reclaim your time and find your luck.", lottoName: "Powerball Numbers",
         share: "📱 Share Luck", promo: "Pre-register Now", back: "Back", coffee: "Buy Coffee", missionHead: "Today's Mission: ", copied: "Luck copied!",
         rules: { count: 5, max: 69, special: 26 }, nicknames: ["Novice", "Resister", "Time Keeper", "Brain Purifier", "Life Architect"]
       },
       ja: {
-        popTitle: "ドパミン脱出まで10秒", popDesc: "ショート、リールに疲れた脳を洗浄中..<br>この10秒があなたの今日を変えます。", popBack: "↩ ショートに戻る",
-        reclaimed: "取り戻した大切な時間", desc: "ドパミンのループから抜け出しましょう。<br>貴重な時間を守り、幸運を掴んでください。", lottoName: "ロト6 (LOTO 6)",
+        reclaimed: "取り戻した大切な時間", desc: "ドパミンの誘惑に打ち勝ったあなたを称賛します。<br>この積み重ねが人生を変えます。", lottoName: "ロト6 (LOTO 6)",
         share: "📱 幸運を共有する", promo: "事前予約はこちら", back: "戻る", coffee: "コーヒーを奢る", missionHead: "今日のミッション: ", copied: "コピーされました！",
         rules: { count: 6, max: 43, special: false }, nicknames: ["初心者", "忍耐の芽", "時間管理者", "浄化マスター", "人生の設計者"]
       },
       es: {
-        popTitle: "10s para escapar", popDesc: "Refrescando tu cerebro de la dopamina..<br>Estos 10 segundos cambiarán tu día.", popBack: "↩ Volver a Shorts",
-        reclaimed: "Tiempo Recuperado", desc: "Escapa del bucle de dopamina.<br>Recupera tu tiempo y encuentra tu suerte.", lottoName: "El Gordo de la Primitiva",
+        reclaimed: "Tiempo Recuperado", desc: "Orgulloso de ti por resistir la dopamina.<br>Recupera tu tiempo y encuentra tu suerte.", lottoName: "El Gordo de la Primitiva",
         share: "📱 Compartir suerte", promo: "Pre-registro", back: "Volver", coffee: "Donar café", missionHead: "Misión de hoy: ", copied: "¡Copiado!",
         rules: { count: 5, max: 54, special: 9 }, nicknames: ["Novato", "Resistente", "Guardián del tiempo", "Purificador", "Arquitecto de vida"]
       }
     };
 
     const cur = i18n[lang] || i18n.en;
-    document.getElementById('pop-title').innerText = cur.popTitle;
-    document.getElementById('pop-desc').innerHTML = cur.popDesc;
-    document.getElementById('pop-back').innerText = cur.popBack;
     document.getElementById('lbl-reclaimed').innerText = cur.reclaimed;
     document.getElementById('lbl-desc').innerHTML = cur.desc;
     document.getElementById('lotto-name').innerText = `[ ${cur.lottoName} ]`;
@@ -132,23 +116,11 @@
     }
     setInterval(updateStats, 1000);
 
-    const last = localStorage.getItem('pause_last_visit_time') || 0;
-    if (Date.now() - last < 600000) {
-      document.getElementById('overlay').style.display = 'none';
-      setTimeout(start, 300);
-    } else {
-      localStorage.setItem('pause_last_visit_time', Date.now());
-      let c = 10;
-      const t = setInterval(() => {
-        c--; document.getElementById('countdown-num').innerText = c;
-        if(c <= 0) { clearInterval(t); document.getElementById('overlay').style.display = 'none'; start(); }
-      }, 1000);
-    }
+    window.onload = startLottery;
 
     let finalNums = [];
-    function start() {
+    function startLottery() {
       const container = document.getElementById('ball-container');
-      container.innerHTML = '';
       const r = cur.rules;
       finalNums = [];
       while(finalNums.length < r.count) {
@@ -169,7 +141,7 @@
           if(i === finalNums.length - 1) {
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             document.getElementById('fortune-box').style.display = 'block';
-            document.getElementById('fortune-msg').innerText = lang === 'ko' ? "멈춘 10초가 행운을 부릅니다." : "Your pause brings luck.";
+            document.getElementById('fortune-msg').innerText = lang === 'ko' ? "멈춘 시간이 행운을 불렀습니다." : "Your pause brought luck.";
             document.getElementById('mission-txt').innerText = cur.missionHead + (lang === 'ko' ? "심호흡 3번 하기" : "Take 3 deep breaths");
           }
         }, i * 300);
@@ -177,10 +149,9 @@
     }
 
     function shareLuck() {
-      const msg = `[Pause10] ${document.getElementById('user-nickname').innerText}(LV.${document.getElementById('lv-text').innerText.split('.')[1]})\n되찾은 시간: ${document.getElementById('time-txt').innerText}\n${cur.lottoName}: ${finalNums.join(", ")}\nhttps://biniare-del.github.io/pause10?lang=${lang}`;
+      const msg = `[Pause10] ${document.getElementById('user-nickname').innerText}\n되찾은 시간: ${document.getElementById('time-txt').innerText}\n${cur.lottoName}: ${finalNums.join(", ")}\nhttps://biniare-del.github.io/pause10?lang=${lang}`;
       navigator.clipboard.writeText(msg).then(() => alert(cur.copied));
     }
-    setInterval(() => { document.getElementById('live-count').innerText = Math.floor(Math.random() * 20) + 15; }, 4000);
   </script>
 </body>
 </html>

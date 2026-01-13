@@ -20,15 +20,14 @@
     #user-nickname { color: var(--gold); font-weight: 800; font-size: 19px; margin-bottom: 8px; display: block; }
     .timer-label { font-size: 13px; color: var(--sub); margin-bottom: 10px; }
     .timer-value { font-size: 45px; font-weight: 900; color: var(--text); font-variant-numeric: tabular-nums; letter-spacing: 1px; }
-    .desc { font-size: 15px; line-height: 1.7; color: var(--sub); margin-bottom: 30px; word-break: keep-all; }
+    .desc { font-size: 14px; line-height: 1.7; color: var(--sub); margin-bottom: 30px; word-break: keep-all; }
     .ball-container { display: flex; gap: 10px; justify-content: center; margin: 25px 0; flex-wrap: wrap; min-height: 60px; }
-    .ball { width: 52px; height: 52px; border-radius: 14px; background: rgba(251, 191, 36, 0.05); border: 2px solid var(--gold); color: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; opacity: 0; transform: translateY(10px); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .ball { width: 52px; height: 52px; border-radius: 14px; background: rgba(251, 191, 36, 0.05); border: 2px solid var(--gold); color: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; opacity: 0; transform: translateY(10px); transition: 0.5s; }
     .ball.show { opacity: 1; transform: translateY(0); }
     #fortune-box { display: none; margin-top: 25px; padding: 30px; border-radius: 35px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(251, 191, 36, 0.15); }
     #mission-txt { color: var(--accent); font-weight: 700; font-size: 16px; margin: 12px 0 25px; display: block; }
     .btn { width: 100%; padding: 20px; border-radius: 20px; font-weight: 800; border: none; cursor: pointer; font-size: 17px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-sizing: border-box; transition: 0.2s; }
-    .btn:active { transform: scale(0.98); }
-    .btn-gold { background: var(--gold); color: #000; margin: 25px 0; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2); }
+    .btn-gold { background: var(--gold); color: #000; margin: 25px 0; }
     .btn-green { background: var(--accent); color: #fff; margin-bottom: 15px; }
     .footer-btns { display: flex; gap: 12px; margin-top: 10px; }
     .btn-footer { flex: 1; background: rgba(255, 255, 255, 0.06); color: var(--sub); font-size: 13px; padding: 18px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
@@ -78,7 +77,7 @@
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    let lang = urlParams.get("lang") || navigator.language.split('-')[0] || "en";
+    let lang = urlParams.get("lang") || navigator.language.split('-')[0] || "ko";
     const i18n = {
       ko: {
         popTitle: "도파민 탈출까지 10초", popDesc: "쇼츠, 릴스, 틱톡에 절여진 뇌를 씻어내는 중..<br>지금 이 10초가 당신의 오늘을 바꿉니다.", popBack: "↩ 그냥 쇼츠 보러 가기",
@@ -136,7 +135,7 @@
     const last = localStorage.getItem('pause_last_visit_time') || 0;
     if (Date.now() - last < 600000) {
       document.getElementById('overlay').style.display = 'none';
-      start();
+      setTimeout(start, 300);
     } else {
       localStorage.setItem('pause_last_visit_time', Date.now());
       let c = 10;
@@ -148,20 +147,24 @@
 
     let finalNums = [];
     function start() {
+      const container = document.getElementById('ball-container');
+      container.innerHTML = '';
       const r = cur.rules;
+      finalNums = [];
       while(finalNums.length < r.count) {
         let n = Math.floor(Math.random() * r.max) + 1;
         if(!finalNums.includes(n)) finalNums.push(n);
       }
       finalNums.sort((a,b)=>a-b);
       if(r.special) finalNums.push(Math.floor(Math.random() * r.special) + 1);
+
       finalNums.forEach((n, i) => {
         setTimeout(() => {
           const ball = document.createElement('div');
           ball.className = 'ball';
           if(r.special && i === finalNums.length - 1) ball.style.borderColor = "var(--accent)";
           ball.innerText = n;
-          document.getElementById('ball-container').appendChild(ball);
+          container.appendChild(ball);
           setTimeout(() => ball.classList.add('show'), 10);
           if(i === finalNums.length - 1) {
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
@@ -174,10 +177,9 @@
     }
 
     function shareLuck() {
-      const msg = `[Pause10] ${document.getElementById('user-nickname').innerText}(LV.${document.getElementById('lv-text').innerText.split('.')[1]})\n${cur.reclaimed}: ${document.getElementById('time-txt').innerText}\n${cur.lottoName}: ${finalNums.join(", ")}\nhttps://biniare-del.github.io/pause10?lang=${lang}`;
+      const msg = `[Pause10] ${document.getElementById('user-nickname').innerText}(LV.${document.getElementById('lv-text').innerText.split('.')[1]})\n되찾은 시간: ${document.getElementById('time-txt').innerText}\n${cur.lottoName}: ${finalNums.join(", ")}\nhttps://biniare-del.github.io/pause10?lang=${lang}`;
       navigator.clipboard.writeText(msg).then(() => alert(cur.copied));
     }
-
     setInterval(() => { document.getElementById('live-count').innerText = Math.floor(Math.random() * 20) + 15; }, 4000);
   </script>
 </body>

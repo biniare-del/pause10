@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Pause10 - Reclaim Your Time</title>
+  <title>Pause10</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script src="quotes.js"></script>
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
     :root { --gold: #fbbf24; --bg: #0b0f1a; --card: #161e2d; --text: #f8fafc; --accent: #10b981; --sub: #94a3b8; }
@@ -20,17 +21,17 @@
     #user-nickname { color: var(--gold); font-weight: 800; font-size: 19px; margin-bottom: 8px; display: block; }
     .timer-label { font-size: 13px; color: var(--sub); margin-bottom: 10px; }
     .timer-value { font-size: 45px; font-weight: 900; color: var(--text); font-variant-numeric: tabular-nums; letter-spacing: 1px; }
-    .desc { font-size: 14px; line-height: 1.7; color: var(--sub); margin-bottom: 30px; word-break: keep-all; }
+    .desc { font-size: 15px; line-height: 1.7; color: var(--sub); margin: 0 auto 30px; width: 85%; word-break: keep-all; min-height: 3.5em; display: flex; align-items: center; justify-content: center; font-style: italic; }
     .ball-container { display: flex; gap: 10px; justify-content: center; margin: 25px 0; flex-wrap: wrap; min-height: 60px; }
     .ball { width: 52px; height: 52px; border-radius: 14px; background: rgba(251, 191, 36, 0.05); border: 2px solid var(--gold); color: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; opacity: 0; transform: translateY(10px); transition: 0.5s; }
     .ball.show { opacity: 1; transform: translateY(0); }
     #fortune-box { display: none; margin-top: 25px; padding: 30px; border-radius: 35px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(251, 191, 36, 0.15); }
     #mission-txt { color: var(--accent); font-weight: 700; font-size: 16px; margin: 12px 0 25px; display: block; }
     .btn { width: 100%; padding: 20px; border-radius: 20px; font-weight: 800; border: none; cursor: pointer; font-size: 17px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-sizing: border-box; transition: 0.2s; }
-    .btn-gold { background: var(--gold); color: #000; margin: 25px 0; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2); }
+    .btn-gold { background: var(--gold); color: #000; margin: 25px 0; box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3); }
     .btn-green { background: var(--accent); color: #fff; margin-bottom: 15px; }
     .footer-btns { display: flex; gap: 12px; margin-top: 10px; }
-    .btn-footer { flex: 1; background: rgba(255, 255, 255, 0.06); color: var(--sub); font-size: 13px; padding: 18px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
+    .btn-footer { flex: 1; background: rgba(255, 255, 255, 0.06); color: var(--sub); font-size: 13px; padding: 20px; border-radius: 20px; border: 1.5px solid rgba(255, 255, 255, 0.1); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; transition: 0.3s; }
   </style>
 </head>
 <body>
@@ -56,11 +57,9 @@
         <span id="mission-txt"></span>
         <button id="btn-share" class="btn btn-green" onclick="shareLuck()"></button>
       </div>
-      
       <a id="btn-promo" href="https://forms.gle/usmPpBsGidPQaYY99" target="_blank" class="btn btn-gold"></a>
-      
       <div class="footer-btns">
-        <a href="javascript:history.back()" class="btn-footer"><span id="lbl-back"></span></a>
+        <a href="javascript:void(0)" onclick="refreshQuote()" class="btn-footer"><span id="lbl-refresh"></span></a>
         <a href="https://www.buymeacoffee.com/pause10" target="_blank" class="btn-footer">☕ <span id="lbl-coffee"></span></a>
       </div>
     </div>
@@ -69,36 +68,20 @@
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     let lang = urlParams.get("lang") || navigator.language.split('-')[0] || "ko";
+    
     const i18n = {
-      ko: {
-        reclaimed: "내가 되찾은 소중한 시간", desc: "도파민의 유혹을 참아낸 당신을 칭찬합니다.<br>이 시간이 쌓여 당신의 인생을 바꿉니다.", lottoName: "동행복권 6/45",
-        share: "📱 행운 공유하기", promo: "앱 출시 사전예약 신청", back: "뒤로", coffee: "커피 후원", missionHead: "오늘의 미션: ", copied: "복사 완료!",
-        rules: { count: 6, max: 45, special: false }, nicknames: ["도파민 입문자", "절제 꿈나무", "시간 관리자", "뇌 정화 마스터", "갓생 설계자"]
-      },
-      en: {
-        reclaimed: "Time Reclaimed", desc: "Proud of you for resisting dopamine loops.<br>Reclaim your time and find your luck.", lottoName: "Powerball Numbers",
-        share: "📱 Share Luck", promo: "Pre-register Now", back: "Back", coffee: "Buy Coffee", missionHead: "Today's Mission: ", copied: "Luck copied!",
-        rules: { count: 5, max: 69, special: 26 }, nicknames: ["Novice", "Resister", "Time Keeper", "Brain Purifier", "Life Architect"]
-      },
-      ja: {
-        reclaimed: "取り戻した大切な時間", desc: "ドパミンの誘惑に打ち勝ったあなたを称賛します。<br>この積み重ねが人生を変えます。", lottoName: "ロト6 (LOTO 6)",
-        share: "📱 幸運を共有する", promo: "事前予約はこちら", back: "戻る", coffee: "コーヒーを奢る", missionHead: "今日のミッション: ", copied: "コピーされました！",
-        rules: { count: 6, max: 43, special: false }, nicknames: ["初心者", "忍耐の芽", "時間管理者", "浄化マスター", "人生の設計者"]
-      },
-      es: {
-        reclaimed: "Tiempo Recuperado", desc: "Orgulloso de ti por resistir la dopamina.<br>Recupera tu tiempo y encuentra tu suerte.", lottoName: "El Gordo de la Primitiva",
-        share: "📱 Compartir suerte", promo: "Pre-registro", back: "Volver", coffee: "Donar café", missionHead: "Misión de hoy: ", copied: "¡Copiado!",
-        rules: { count: 5, max: 54, special: 9 }, nicknames: ["Novato", "Resistente", "Guardián del tiempo", "Purificador", "Arquitecto de vida"]
-      }
+      ko: { reclaimed: "내가 되찾은 소중한 시간", refresh: "✨ 다른 명언", lottoName: "동행복권 6/45", share: "📱 행운 공유", promo: "앱 사전예약", coffee: "커피 후원", mission: "미션: 심호흡 3번", fortune: "행운이 찾아왔습니다.", rules: { count: 6, max: 45, special: false }, nicknames: ["도파민 입문자", "절제 꿈나무", "시간 관리자", "뇌 정화 마스터", "갓생 설계자"] },
+      en: { reclaimed: "Time Reclaimed", refresh: "✨ Next Quote", lottoName: "Powerball", share: "📱 Share Luck", promo: "Pre-register", coffee: "Support", mission: "Mission: 3 Breaths", fortune: "Luck has arrived.", rules: { count: 5, max: 69, special: 26 }, nicknames: ["Novice", "Resister", "Time Keeper", "Brain Purifier", "Life Architect"] },
+      ja: { reclaimed: "取り戻した時間", refresh: "✨ 次の名言", lottoName: "ロト6", share: "📱 幸運を共有", promo: "事前予約", coffee: "応援する", mission: "ミッション：深呼吸3回", fortune: "幸運が訪れました。", rules: { count: 6, max: 43, special: false }, nicknames: ["初心者", "忍耐の芽", "時間管理者", "浄化マスター", "人生の設計者"] },
+      es: { reclaimed: "Tiempo Recuperado", refresh: "✨ Otra frase", lottoName: "El Gordo", share: "📱 Compartir", promo: "Pre-registro", coffee: "Donar", mission: "Misión: 3 respiraciones", fortune: "Llegó la suerte.", rules: { count: 5, max: 54, special: 9 }, nicknames: ["Novato", "Resistente", "Guardián", "Purificador", "Arquitecto"] }
     };
 
     const cur = i18n[lang] || i18n.en;
     document.getElementById('lbl-reclaimed').innerText = cur.reclaimed;
-    document.getElementById('lbl-desc').innerHTML = cur.desc;
+    document.getElementById('lbl-refresh').innerText = cur.refresh;
     document.getElementById('lotto-name').innerText = `[ ${cur.lottoName} ]`;
     document.getElementById('btn-share').innerText = cur.share;
     document.getElementById('btn-promo').innerText = cur.promo;
-    document.getElementById('lbl-back').innerText = cur.back;
     document.getElementById('lbl-coffee').innerText = cur.coffee;
 
     let totalSavedSec = parseInt(localStorage.getItem('pause_total_saved_sec') || 0);
@@ -111,18 +94,24 @@
       document.getElementById('time-txt').innerText = `${h}:${m}:${s}`;
       const level = Math.floor(totalSavedSec / 60) + 1;
       document.getElementById('lv-text').innerText = `LV.${level}`;
-      const nickIdx = Math.min(Math.floor(level / 5), cur.nicknames.length - 1);
-      document.getElementById('user-nickname').innerText = cur.nicknames[nickIdx];
+      document.getElementById('user-nickname').innerText = cur.nicknames[Math.min(Math.floor(level / 5), 4)];
     }
     setInterval(updateStats, 1000);
 
-    window.onload = startLottery;
+    function refreshQuote() {
+      // 💡 quotes.js에서 데이터를 가져와 표시
+      const qList = quotesData[lang] || quotesData.en;
+      const q = qList[Math.floor(Math.random() * qList.length)];
+      document.getElementById('lbl-desc').innerHTML = `"${q}"`;
+      confetti({ particleCount: 20, spread: 40, origin: { y: 0.8 }, colors: ['#fbbf24'] });
+    }
 
-    let finalNums = [];
+    window.onload = () => { refreshQuote(); startLottery(); };
+
     function startLottery() {
       const container = document.getElementById('ball-container');
       const r = cur.rules;
-      finalNums = [];
+      let finalNums = [];
       while(finalNums.length < r.count) {
         let n = Math.floor(Math.random() * r.max) + 1;
         if(!finalNums.includes(n)) finalNums.push(n);
@@ -141,16 +130,16 @@
           if(i === finalNums.length - 1) {
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             document.getElementById('fortune-box').style.display = 'block';
-            document.getElementById('fortune-msg').innerText = lang === 'ko' ? "멈춘 시간이 행운을 불렀습니다." : "Your pause brought luck.";
-            document.getElementById('mission-txt').innerText = cur.missionHead + (lang === 'ko' ? "심호흡 3번 하기" : "Take 3 deep breaths");
+            document.getElementById('fortune-msg').innerText = cur.fortune;
+            document.getElementById('mission-txt').innerText = cur.mission;
           }
         }, i * 300);
       });
     }
 
     function shareLuck() {
-      const msg = `[Pause10] ${document.getElementById('user-nickname').innerText}\n되찾은 시간: ${document.getElementById('time-txt').innerText}\n${cur.lottoName}: ${finalNums.join(", ")}\nhttps://biniare-del.github.io/pause10?lang=${lang}`;
-      navigator.clipboard.writeText(msg).then(() => alert(cur.copied));
+      const msg = `[Pause10] 되찾은 시간: ${document.getElementById('time-txt').innerText}\nhttps://biniare-del.github.io/pause10?lang=${lang}`;
+      navigator.clipboard.writeText(msg).then(() => alert("복사 완료!"));
     }
   </script>
 </body>

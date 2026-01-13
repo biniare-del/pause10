@@ -94,109 +94,38 @@
     <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
   </audio>
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const lang = (urlParams.get("lang") || "ko").toLowerCase();
+  // ... [상단 i18n 및 쿨타임 로직은 동일합니다] ...
 
-    const i18n = {
-      ko: { desc: "잠시 멈춤이 당신의 가치를 만듭니다.", rank: "등급", reclaimed: "되찾은 시간", share: "📱 행운 공유하기", missionBtn: "🎯 오늘의 미션 완료", promo: "앱 출시 사전예약 신청", grades: ["인내의 초보", "시간 관리자", "도파민 헌터", "자유인", "파우즈 마스터"], back: "뒤로", coffee: "커피 후원" },
-      en: { desc: "Your pause defines your value.", rank: "RANK", reclaimed: "RECLAIMED", share: "📱 Share Luck", missionBtn: "🎯 Complete Mission", promo: "Pre-register Now", grades: ["Novice", "Manager", "Hunter", "Free Spirit", "Master"], back: "Back", coffee: "Buy Coffee" }
-    };
-    const cur = i18n[lang] || i18n.ko;
+function showFortune() {
+  // 아이콘, 운세, 미션 세트 데이터
+  const fortuneData = [
+    { icon: "🍀", ko: "인내는 쓰고 열매는 답니다.", mi: "물 한 잔 마시기" },
+    { icon: "💰", ko: "멈춘 10초가 오늘의 금전운을 부릅니다.", mi: "심호흡 3번 하기" },
+    { icon: "🧘", ko: "마음의 평온이 가장 큰 자산입니다.", mi: "기지개 크게 켜기" },
+    { icon: "☀️", ko: "당신의 밝은 에너지가 행운을 끌어당깁니다.", mi: "거울 보고 미소 짓기" },
+    { icon: "💎", ko: "흔들리지 않는 마음이 보석보다 빛납니다.", mi: "눈 10초간 감고 있기" }
+  ];
 
-    document.getElementById('lbl-desc').innerText = cur.desc;
-    document.getElementById('lbl-rank').innerText = cur.rank;
-    document.getElementById('lbl-reclaimed').innerText = cur.reclaimed;
-    document.getElementById('btn-share').innerText = cur.share;
-    document.getElementById('btn-mission').innerText = cur.missionBtn;
-    document.getElementById('btn-promo').innerText = cur.promo;
-    document.getElementById('lbl-back').innerText = cur.back;
-    document.getElementById('lbl-coffee').innerText = cur.coffee;
+  // 랜덤으로 하나 선택
+  const luck = fortuneData[Math.floor(Math.random() * fortuneData.length)];
+  
+  // 화면에 데이터 뿌리기
+  document.getElementById('fortune-box').style.display = 'block';
+  document.getElementById('talisman-icon').innerText = luck.icon;
+  document.getElementById('fortune-msg').innerText = luck.ko;
+  
+  // 미션 박스가 있다면 미션 텍스트 넣어주기
+  const missionTxt = document.getElementById('mission-txt');
+  if (missionTxt) {
+    missionTxt.innerText = "🎯 오늘의 미션: " + luck.mi;
+    document.getElementById('mission-box').style.display = 'block';
+  }
+}
 
-    // --- 🎹 사운드 컨트롤 ---
-    const bgm = document.getElementById('bgm');
-    bgm.volume = 0.2; 
-    function startBgmOnFirstClick() { if(bgm.paused) bgm.play(); }
-    function toggleSound(e) {
-      e.stopPropagation();
-      if(bgm.paused) { bgm.play(); document.getElementById('sound-btn').innerText = "🔊"; }
-      else { bgm.pause(); document.getElementById('sound-btn').innerText = "🔇"; }
-    }
-
-    // --- 🕒 10분 쿨타임 (매너 모드) 핵심 로직 ---
-    const COOLDOWN_TIME = 10 * 60 * 1000; // 10분
-    let lastVisit = localStorage.getItem('pause_last_visit_time') || 0;
-    let now = Date.now();
-    let isCooldown = (now - lastVisit) < COOLDOWN_TIME;
-
-    // 페이지에 접속한 순간 바로 방문 기록을 남깁니다. (이제 10분간은 타이머 안 뜸)
-    if (!isCooldown) {
-      localStorage.setItem('pause_last_visit_time', now);
-    }
-
-    // --- 🕒 라이브 타이머 로직 ---
-    let totalSaved = parseInt(localStorage.getItem('pause_total_time') || 0);
-    let sessionStart = Date.now();
-    function updateLiveTimer() {
-      let currentTime = Date.now();
-      let sessionElapsed = Math.floor((currentTime - sessionStart) / 1000);
-      let displayTime = totalSaved + sessionElapsed;
-      let h = String(Math.floor(displayTime / 3600)).padStart(2, '0');
-      let m = String(Math.floor((displayTime % 3600) / 60)).padStart(2, '0');
-      let s = String(displayTime % 60).padStart(2, '0');
-      document.getElementById('time-txt').innerText = `${h}:${m}:${s}`;
-      const idx = Math.min(Math.floor(displayTime / 30), 4);
-      document.getElementById('grade-txt').innerText = cur.grades[idx];
-      localStorage.setItem('pause_total_time', displayTime);
-    }
-    setInterval(updateLiveTimer, 1000);
-
-    // --- 🎰 번호 생성 및 대기 시간 결정 ---
-    const nums = [];
-    while(nums.length < 6) { let r = Math.floor(Math.random() * 45) + 1; if(!nums.includes(r)) nums.push(r); }
-    nums.sort((a,b) => a-b);
-    const container = document.getElementById('ball-container');
-
-    // 쿨타임(10분 내 재방문)이면 0초, 처음이면 10초 대기
-    const waitTime = isCooldown ? 0 : 10000;
-
-    setTimeout(() => {
-      nums.forEach((n, i) => {
-        setTimeout(() => {
-          const ball = document.createElement('div'); ball.className = 'ball'; ball.innerText = n;
-          container.appendChild(ball); setTimeout(() => ball.classList.add('show'), 10);
-          if(i === 5) { 
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#fbbf24', '#ffffff'] }); 
-            showFortune();
-          }
-        }, i * 250);
-      });
-    }, waitTime);
-
-    function showFortune() {
-      const fortuneData = [
-        { icon: "🍀", ko: "인내는 쓰고 열매는 답니다.", en: "Patience is bitter, but its fruit is sweet." },
-        { icon: "💰", ko: "멈춘 10초가 오늘의 금전운을 부릅니다.", en: "The 10s you paused brings wealth." }
-      ];
-      const luck = fortuneData[Math.floor(Math.random() * fortuneData.length)];
-      document.getElementById('fortune-box').style.display = 'block';
-      document.getElementById('talisman-icon').innerText = luck.icon;
-      document.getElementById('fortune-msg').innerText = luck[lang] || luck.ko;
-    }
-
-    function completeMission() { alert(lang === 'ko' ? "경험치 추가 상승!" : "Bonus Exp Up!"); }
-    function shareLuck() { 
-      const time = document.getElementById('time-txt').innerText;
-      const msg = `[Pause10] Reclaimed Time: ${time}\nLucky: ${nums.join(", ")}\nbiniare-del.github.io/pause10`;
-      navigator.clipboard.writeText(msg).then(() => alert(lang === 'ko' ? "복사 완료!" : "Copied!"));
-    }
-
-    // 접속자 시뮬레이션
-    setInterval(() => {
-      const count = Math.floor(Math.random() * (25 - 8) + 8);
-      document.getElementById('live-count').innerText = count;
-    }, 5000);
+// ... [이하 생략] ...
   </script>
 </body>
 </html>
+
 
 

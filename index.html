@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Pause10 - 도파민 탈출</title>
+  <title>Pause10 - Stop Before Shorts</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
@@ -11,26 +11,24 @@
     body { background: var(--bg); color: var(--text); font-family: 'Pretendard', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; min-height: 100vh; box-sizing: border-box; }
     .container { max-width: 600px; width: 100%; }
     
-    /* 카드 디자인 복구 */
-    .card { background: var(--card); padding: 45px 30px; border-radius: 40px; border: 1.5px solid rgba(251, 191, 36, 0.2); position: relative; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .card { background: var(--card); padding: 45px 30px; border-radius: 40px; border: 1.5px solid rgba(251, 191, 36, 0.2); position: relative; text-align: center; }
     
-    /* 레벨 및 라이브 배지 복구 */
     .header-badges { position: absolute; top: 20px; left: 30px; right: 30px; display: flex; justify-content: space-between; align-items: center; }
     .lv-badge { background: var(--gold); color: #000; padding: 4px 12px; border-radius: 10px; font-weight: 900; font-size: 13px; }
     .live-badge { background: rgba(16, 185, 129, 0.1); color: var(--accent); padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
     .dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; animation: blink 1.2s infinite; }
     @keyframes blink { 50% { opacity: 0.3; } }
 
-    /* 누적 타이머 및 닉네임 영역 */
     .timer-section { margin: 30px 0 20px; }
     #user-nickname { color: var(--gold); font-weight: 800; font-size: 18px; margin-bottom: 5px; display: block; }
     .timer-label { font-size: 13px; color: var(--sub); margin-bottom: 8px; }
-    .timer-value { font-size: 42px; font-weight: 900; color: var(--text); font-variant-numeric: tabular-nums; letter-spacing: 1px; }
+    .timer-value { font-size: 42px; font-weight: 900; color: var(--text); font-variant-numeric: tabular-nums; }
 
     h1 { color: var(--gold); font-size: 34px; font-weight: 900; margin: 10px 0; }
     .desc { font-size: 15px; line-height: 1.7; color: var(--sub); margin-bottom: 30px; word-break: keep-all; }
 
-    .ball-container { display: flex; gap: 10px; justify-content: center; margin: 25px 0; flex-wrap: wrap; }
+    /* 🎲 복권 번호 공 스타일 */
+    .ball-container { display: flex; gap: 10px; justify-content: center; margin: 25px 0; flex-wrap: wrap; min-height: 60px; }
     .ball { width: 50px; height: 50px; border-radius: 14px; background: rgba(251, 191, 36, 0.05); border: 2px solid var(--gold); color: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; opacity: 0; transform: translateY(10px); transition: 0.5s; }
     .ball.show { opacity: 1; transform: translateY(0); }
 
@@ -52,10 +50,10 @@
 
   <div id="overlay">
     <div class="pop-card">
-      <h2 id="pop-title"></h2>
-      <p id="pop-desc"></p>
+      <h2 id="pop-title">도파민 탈출까지 10초</h2>
+      <p id="pop-desc">뇌를 정화하고 행운의 숫자를 확인하세요.</p>
       <div id="countdown-num">10</div>
-      <button id="pop-back" onclick="history.back()" style="background:none; border:none; color:var(--sub); text-decoration:underline; cursor:pointer; font-size:15px;"></button>
+      <button onclick="history.back()" id="pop-back" style="background:none; border:none; color:var(--sub); text-decoration:underline; cursor:pointer; font-size:15px;"></button>
     </div>
   </div>
 
@@ -66,9 +64,9 @@
         <div class="live-badge"><div class="dot"></div><span id="live-count">24</span> LIVE</div>
       </div>
 
-      <div class="timer-section">
+      <div class="timer-section" style="margin-top:40px;">
         <span id="user-nickname">도파민 입문자</span>
-        <p class="timer-label" id="lbl-reclaimed"></p>
+        <p class="timer-label" id="lbl-reclaimed">내가 되찾은 소중한 시간</p>
         <div class="timer-value" id="time-txt">00:00:00</div>
       </div>
 
@@ -86,7 +84,7 @@
         <button id="btn-share" class="btn btn-green" onclick="shareLuck()"></button>
       </div>
 
-      <a id="btn-promo" href="#" class="btn btn-gold"></a>
+      <a id="btn-promo" href="https://forms.gle/vPshj1A3s8S128fV6" target="_blank" class="btn btn-gold"></a>
 
       <div class="footer-btns">
         <a href="javascript:history.back()" class="btn-footer" id="lbl-back"></a>
@@ -135,8 +133,8 @@
 
     const cur = i18n[lang] || i18n.en;
 
-    // 텍스트 주입
-    document.getElementById('pop-title').innerText = cur.popTitle;
+    // UI 텍스트 적용
+    document.getElementById('pop-title').innerHTML = cur.popTitle;
     document.getElementById('pop-desc').innerHTML = cur.popDesc;
     document.getElementById('pop-back').innerText = cur.popBack;
     document.getElementById('lbl-reclaimed').innerText = cur.reclaimed;
@@ -149,30 +147,23 @@
 
     // ⏱️ 실시간 누적 및 레벨 로직
     let totalSavedSec = parseInt(localStorage.getItem('pause_total_saved_sec') || 0);
-
     function updateStats() {
       totalSavedSec++;
       localStorage.setItem('pause_total_saved_sec', totalSavedSec);
-      
       const h = Math.floor(totalSavedSec / 3600).toString().padStart(2, '0');
       const m = Math.floor((totalSavedSec % 3600) / 60).toString().padStart(2, '0');
       const s = (totalSavedSec % 60).toString().padStart(2, '0');
       document.getElementById('time-txt').innerText = `${h}:${m}:${s}`;
-
-      // 레벨: 60초당 1레벨
       const level = Math.floor(totalSavedSec / 60) + 1;
       document.getElementById('lv-text').innerText = `LV.${level}`;
-
-      // 닉네임: 레벨에 따라 변경
       const nickIdx = Math.min(Math.floor(level / 5), cur.nicknames.length - 1);
       document.getElementById('user-nickname').innerText = cur.nicknames[nickIdx];
     }
     setInterval(updateStats, 1000);
 
     // 🕒 10분 쿨타임 및 시퀀스
-    const COOLDOWN = 10 * 60 * 1000;
     const last = localStorage.getItem('pause_last_visit_time') || 0;
-    if (Date.now() - last < COOLDOWN) {
+    if (Date.now() - last < 600000) {
       document.getElementById('overlay').style.display = 'none';
       start();
     } else {
@@ -184,10 +175,12 @@
       }, 1000);
     }
 
+    // 🎲 번호 생성 함수 (확실히 복구)
     let finalNums = [];
     function start() {
       const container = document.getElementById('ball-container');
       const r = cur.rules;
+      finalNums = [];
       while(finalNums.length < r.count) {
         let n = Math.floor(Math.random() * r.max) + 1;
         if(!finalNums.includes(n)) finalNums.push(n);
@@ -214,7 +207,7 @@
     }
 
     function shareLuck() {
-      const msg = `[Pause10] ${document.getElementById('user-nickname').innerText}(LV.${document.getElementById('lv-text').innerText.split('.')[1]})\n되찾은 시간: ${document.getElementById('time-txt').innerText}\n${cur.lottoName}: ${finalNums.join(", ")}\nhttps://biniare-del.github.io/pause10?lang=${lang}`;
+      const msg = `[Pause10] ${document.getElementById('user-nickname').innerText}\n되찾은 시간: ${document.getElementById('time-txt').innerText}\n${cur.lottoName}: ${finalNums.join(", ")}\nhttps://biniare-del.github.io/pause10?lang=${lang}`;
       navigator.clipboard.writeText(msg).then(() => alert(cur.copied));
     }
 

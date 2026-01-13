@@ -10,50 +10,39 @@
     :root { --gold: #fbbf24; --bg: #0b0f1a; --card: #161e2d; --text: #f8fafc; --accent: #10b981; --sub: #94a3b8; }
     body { background: var(--bg); color: var(--text); font-family: 'Pretendard', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; min-height: 100vh; box-sizing: border-box; }
     .container { max-width: 600px; width: 100%; }
-    
-    .card { background: var(--card); padding: 45px 30px; border-radius: 40px; border: 1.5px solid rgba(251, 191, 36, 0.2); position: relative; text-align: center; }
-    
+    .card { background: var(--card); padding: 45px 30px; border-radius: 40px; border: 1.5px solid rgba(251, 191, 36, 0.2); position: relative; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
     .header-badges { position: absolute; top: 20px; left: 30px; right: 30px; display: flex; justify-content: space-between; align-items: center; }
     .lv-badge { background: var(--gold); color: #000; padding: 4px 12px; border-radius: 10px; font-weight: 900; font-size: 13px; }
     .live-badge { background: rgba(16, 185, 129, 0.1); color: var(--accent); padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
     .dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; animation: blink 1.2s infinite; }
     @keyframes blink { 50% { opacity: 0.3; } }
-
-    .timer-section { margin: 30px 0 20px; }
-    #user-nickname { color: var(--gold); font-weight: 800; font-size: 18px; margin-bottom: 5px; display: block; }
-    .timer-label { font-size: 13px; color: var(--sub); margin-bottom: 8px; }
-    .timer-value { font-size: 42px; font-weight: 900; color: var(--text); font-variant-numeric: tabular-nums; }
-
-    h1 { color: var(--gold); font-size: 34px; font-weight: 900; margin: 10px 0; }
+    .timer-section { margin: 35px 0 20px; }
+    #user-nickname { color: var(--gold); font-weight: 800; font-size: 19px; margin-bottom: 8px; display: block; }
+    .timer-label { font-size: 13px; color: var(--sub); margin-bottom: 10px; }
+    .timer-value { font-size: 45px; font-weight: 900; color: var(--text); font-variant-numeric: tabular-nums; letter-spacing: 1px; }
     .desc { font-size: 15px; line-height: 1.7; color: var(--sub); margin-bottom: 30px; word-break: keep-all; }
-
-    /* 🎲 복권 번호 공 스타일 */
     .ball-container { display: flex; gap: 10px; justify-content: center; margin: 25px 0; flex-wrap: wrap; min-height: 60px; }
-    .ball { width: 50px; height: 50px; border-radius: 14px; background: rgba(251, 191, 36, 0.05); border: 2px solid var(--gold); color: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; opacity: 0; transform: translateY(10px); transition: 0.5s; }
+    .ball { width: 52px; height: 52px; border-radius: 14px; background: rgba(251, 191, 36, 0.05); border: 2px solid var(--gold); color: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; opacity: 0; transform: translateY(10px); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     .ball.show { opacity: 1; transform: translateY(0); }
-
     #fortune-box { display: none; margin-top: 25px; padding: 30px; border-radius: 35px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(251, 191, 36, 0.15); }
     #mission-txt { color: var(--accent); font-weight: 700; font-size: 16px; margin: 12px 0 25px; display: block; }
-
-    .btn { width: 100%; padding: 20px; border-radius: 20px; font-weight: 800; border: none; cursor: pointer; font-size: 17px; text-decoration: none; display: flex; align-items: center; justify-content: center; }
-    .btn-gold { background: var(--gold); color: #000; margin: 25px 0; }
+    .btn { width: 100%; padding: 20px; border-radius: 20px; font-weight: 800; border: none; cursor: pointer; font-size: 17px; text-decoration: none; display: flex; align-items: center; justify-content: center; box-sizing: border-box; transition: 0.2s; }
+    .btn:active { transform: scale(0.98); }
+    .btn-gold { background: var(--gold); color: #000; margin: 25px 0; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2); }
     .btn-green { background: var(--accent); color: #fff; margin-bottom: 15px; }
-    
-    .footer-btns { display: flex; gap: 12px; margin-top: 25px; }
-    .btn-footer { flex: 1; background: rgba(255,255,255,0.06); color: var(--sub); font-size: 13px; padding: 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; }
-
+    .footer-btns { display: flex; gap: 12px; margin-top: 10px; }
+    .btn-footer { flex: 1; background: rgba(255, 255, 255, 0.06); color: var(--sub); font-size: 13px; padding: 18px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
     #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; box-sizing: border-box; }
     .pop-card { border: 2.5px solid var(--gold); border-radius: 45px; padding: 45px; background: #000; width: 90%; max-width: 440px; }
   </style>
 </head>
 <body>
-
   <div id="overlay">
     <div class="pop-card">
-      <h2 id="pop-title">도파민 탈출까지 10초</h2>
-      <p id="pop-desc">뇌를 정화하고 행운의 숫자를 확인하세요.</p>
-      <div id="countdown-num">10</div>
-      <button onclick="history.back()" id="pop-back" style="background:none; border:none; color:var(--sub); text-decoration:underline; cursor:pointer; font-size:15px;"></button>
+      <h2 id="pop-title" style="color:var(--gold); margin-bottom:15px; font-size:26px;"></h2>
+      <p id="pop-desc" style="color:#ccc; line-height:1.7; margin-bottom:25px; font-size:16px;"></p>
+      <div id="countdown-num" style="font-size:90px; font-weight:900; color:var(--gold); margin:25px 0;">10</div>
+      <button id="pop-back" onclick="history.back()" style="background:none; border:none; color:var(--sub); text-decoration:underline; cursor:pointer; font-size:15px;"></button>
     </div>
   </div>
 
@@ -63,31 +52,25 @@
         <div class="lv-badge" id="lv-text">LV.1</div>
         <div class="live-badge"><div class="dot"></div><span id="live-count">24</span> LIVE</div>
       </div>
-
-      <div class="timer-section" style="margin-top:40px;">
-        <span id="user-nickname">도파민 입문자</span>
-        <p class="timer-label" id="lbl-reclaimed">내가 되찾은 소중한 시간</p>
+      <div class="timer-section">
+        <span id="user-nickname"></span>
+        <p class="timer-label" id="lbl-reclaimed"></p>
         <div class="timer-value" id="time-txt">00:00:00</div>
       </div>
-
       <p id="lbl-desc" class="desc"></p>
-
       <div id="ball-area">
          <span id="lotto-name" style="color:var(--gold); font-weight:700; font-size:15px; display:block; margin-bottom:12px;"></span>
          <div id="ball-container" class="ball-container"></div>
       </div>
-      
       <div id="fortune-box">
         <div style="font-size:45px; margin-bottom:12px;">🔮</div>
         <p id="fortune-msg" style="font-weight:800; font-size:19px;"></p>
         <span id="mission-txt"></span>
         <button id="btn-share" class="btn btn-green" onclick="shareLuck()"></button>
       </div>
-
       <a id="btn-promo" href="https://forms.gle/vPshj1A3s8S128fV6" target="_blank" class="btn btn-gold"></a>
-
       <div class="footer-btns">
-        <a href="javascript:history.back()" class="btn-footer" id="lbl-back"></a>
+        <a href="javascript:history.back()" class="btn-footer"><span id="lbl-back"></span></a>
         <a href="https://www.buymeacoffee.com/pause10" target="_blank" class="btn-footer">☕ <span id="lbl-coffee"></span></a>
       </div>
     </div>
@@ -95,46 +78,36 @@
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    let lang = urlParams.get("lang") || navigator.language.split('-')[0] || "ko";
+    let lang = urlParams.get("lang") || navigator.language.split('-')[0] || "en";
     const i18n = {
       ko: {
-        popTitle: "도파민 탈출까지 10초",
-        popDesc: "쇼츠, 릴스, 틱톡에 절여진 뇌를 씻어내는 중..<br>지금 이 10초가 당신의 오늘을 바꿉니다.",
-        popBack: "↩ 그냥 쇼츠 보러 가기",
-        reclaimed: "내가 되찾은 소중한 시간",
-        desc: "쇼츠, 릴스, 틱톡의 도파민에 절여진 당신..<br>탈출할 기회와 행운을 동시에 드립니다.",
-        lottoName: "동행복권 6/45",
-        share: "📱 행운 공유하기",
-        promo: "앱 출시 사전예약 신청",
-        back: "뒤로",
-        coffee: "커피 후원",
-        missionHead: "오늘의 미션: ",
-        copied: "복사 완료!",
-        rules: { count: 6, max: 45, special: false },
-        nicknames: ["도파민 입문자", "절제 꿈나무", "시간 관리자", "뇌 정화 마스터", "갓생 설계자"]
+        popTitle: "도파민 탈출까지 10초", popDesc: "쇼츠, 릴스, 틱톡에 절여진 뇌를 씻어내는 중..<br>지금 이 10초가 당신의 오늘을 바꿉니다.", popBack: "↩ 그냥 쇼츠 보러 가기",
+        reclaimed: "내가 되찾은 소중한 시간", desc: "쇼츠, 릴스, 틱톡의 도파민에 절여진 당신..<br>탈출할 기회와 행운을 동시에 드립니다.", lottoName: "동행복권 6/45",
+        share: "📱 행운 공유하기", promo: "앱 출시 사전예약 신청", back: "뒤로", coffee: "커피 후원", missionHead: "오늘의 미션: ", copied: "행운이 복사되었습니다!",
+        rules: { count: 6, max: 45, special: false }, nicknames: ["도파민 입문자", "절제 꿈나무", "시간 관리자", "뇌 정화 마스터", "갓생 설계자"]
       },
       en: {
-        popTitle: "10s to Escape Dopamine",
-        popDesc: "Refreshing your brain from dopamine loops..<br>These 10 seconds will change your day.",
-        popBack: "↩ Back to Shorts",
-        reclaimed: "Time Reclaimed",
-        desc: "Escape the dopamine loop.<br>Reclaim your time and find your luck.",
-        lottoName: "Powerball Numbers",
-        share: "📱 Share Luck",
-        promo: "Pre-register Now",
-        back: "Back",
-        coffee: "Buy Coffee",
-        missionHead: "Today's Mission: ",
-        copied: "Luck copied!",
-        rules: { count: 5, max: 69, special: 26 },
-        nicknames: ["Novice", "Resister", "Time Keeper", "Brain Purifier", "Life Architect"]
+        popTitle: "10s to Escape Dopamine", popDesc: "Refreshing your brain from dopamine loops..<br>These 10 seconds will change your day.", popBack: "↩ Back to Shorts",
+        reclaimed: "Time Reclaimed", desc: "Escape the dopamine loop.<br>Reclaim your time and find your luck.", lottoName: "Powerball Numbers",
+        share: "📱 Share Luck", promo: "Pre-register Now", back: "Back", coffee: "Buy Coffee", missionHead: "Today's Mission: ", copied: "Luck copied!",
+        rules: { count: 5, max: 69, special: 26 }, nicknames: ["Novice", "Resister", "Time Keeper", "Brain Purifier", "Life Architect"]
+      },
+      ja: {
+        popTitle: "ドパミン脱出まで10秒", popDesc: "ショート、リールに疲れた脳を洗浄中..<br>この10秒があなたの今日を変えます。", popBack: "↩ ショートに戻る",
+        reclaimed: "取り戻した大切な時間", desc: "ドパミンのループから抜け出しましょう。<br>貴重な時間を守り、幸運を掴んでください。", lottoName: "ロト6 (LOTO 6)",
+        share: "📱 幸運を共有する", promo: "事前予約はこちら", back: "戻る", coffee: "コーヒーを奢る", missionHead: "今日のミッション: ", copied: "コピーされました！",
+        rules: { count: 6, max: 43, special: false }, nicknames: ["初心者", "忍耐の芽", "時間管理者", "浄化マスター", "人生の設計者"]
+      },
+      es: {
+        popTitle: "10s para escapar", popDesc: "Refrescando tu cerebro de la dopamina..<br>Estos 10 segundos cambiarán tu día.", popBack: "↩ Volver a Shorts",
+        reclaimed: "Tiempo Recuperado", desc: "Escapa del bucle de dopamina.<br>Recupera tu tiempo y encuentra tu suerte.", lottoName: "El Gordo de la Primitiva",
+        share: "📱 Compartir suerte", promo: "Pre-registro", back: "Volver", coffee: "Donar café", missionHead: "Misión de hoy: ", copied: "¡Copiado!",
+        rules: { count: 5, max: 54, special: 9 }, nicknames: ["Novato", "Resistente", "Guardián del tiempo", "Purificador", "Arquitecto de vida"]
       }
     };
 
     const cur = i18n[lang] || i18n.en;
-
-    // UI 텍스트 적용
-    document.getElementById('pop-title').innerHTML = cur.popTitle;
+    document.getElementById('pop-title').innerText = cur.popTitle;
     document.getElementById('pop-desc').innerHTML = cur.popDesc;
     document.getElementById('pop-back').innerText = cur.popBack;
     document.getElementById('lbl-reclaimed').innerText = cur.reclaimed;
@@ -145,7 +118,6 @@
     document.getElementById('lbl-back').innerText = cur.back;
     document.getElementById('lbl-coffee').innerText = cur.coffee;
 
-    // ⏱️ 실시간 누적 및 레벨 로직
     let totalSavedSec = parseInt(localStorage.getItem('pause_total_saved_sec') || 0);
     function updateStats() {
       totalSavedSec++;
@@ -161,7 +133,6 @@
     }
     setInterval(updateStats, 1000);
 
-    // 🕒 10분 쿨타임 및 시퀀스
     const last = localStorage.getItem('pause_last_visit_time') || 0;
     if (Date.now() - last < 600000) {
       document.getElementById('overlay').style.display = 'none';
@@ -175,45 +146,39 @@
       }, 1000);
     }
 
-    // 🎲 번호 생성 함수 (확실히 복구)
     let finalNums = [];
     function start() {
-      const container = document.getElementById('ball-container');
       const r = cur.rules;
-      finalNums = [];
       while(finalNums.length < r.count) {
         let n = Math.floor(Math.random() * r.max) + 1;
         if(!finalNums.includes(n)) finalNums.push(n);
       }
       finalNums.sort((a,b)=>a-b);
       if(r.special) finalNums.push(Math.floor(Math.random() * r.special) + 1);
-
       finalNums.forEach((n, i) => {
         setTimeout(() => {
           const ball = document.createElement('div');
           ball.className = 'ball';
           if(r.special && i === finalNums.length - 1) ball.style.borderColor = "var(--accent)";
           ball.innerText = n;
-          container.appendChild(ball);
+          document.getElementById('ball-container').appendChild(ball);
           setTimeout(() => ball.classList.add('show'), 10);
           if(i === finalNums.length - 1) {
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             document.getElementById('fortune-box').style.display = 'block';
-            document.getElementById('fortune-msg').innerText = "멈춘 10초가 행운을 부릅니다.";
-            document.getElementById('mission-txt').innerText = cur.missionHead + "심호흡 3번 하기";
+            document.getElementById('fortune-msg').innerText = lang === 'ko' ? "멈춘 10초가 행운을 부릅니다." : "Your pause brings luck.";
+            document.getElementById('mission-txt').innerText = cur.missionHead + (lang === 'ko' ? "심호흡 3번 하기" : "Take 3 deep breaths");
           }
         }, i * 300);
       });
     }
 
     function shareLuck() {
-      const msg = `[Pause10] ${document.getElementById('user-nickname').innerText}\n되찾은 시간: ${document.getElementById('time-txt').innerText}\n${cur.lottoName}: ${finalNums.join(", ")}\nhttps://biniare-del.github.io/pause10?lang=${lang}`;
+      const msg = `[Pause10] ${document.getElementById('user-nickname').innerText}(LV.${document.getElementById('lv-text').innerText.split('.')[1]})\n${cur.reclaimed}: ${document.getElementById('time-txt').innerText}\n${cur.lottoName}: ${finalNums.join(", ")}\nhttps://biniare-del.github.io/pause10?lang=${lang}`;
       navigator.clipboard.writeText(msg).then(() => alert(cur.copied));
     }
 
-    setInterval(() => {
-      document.getElementById('live-count').innerText = Math.floor(Math.random() * 20) + 15;
-    }, 4000);
+    setInterval(() => { document.getElementById('live-count').innerText = Math.floor(Math.random() * 20) + 15; }, 4000);
   </script>
 </body>
 </html>
